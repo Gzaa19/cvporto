@@ -17,11 +17,11 @@ async function buildRAGContext() {
         prisma.heroStatus.findFirst()
     ])
 
-    const skillsByCategory = skills.reduce((acc, skill) => {
+    const skillsByCategory = skills.reduce((acc: Record<string, string[]>, skill) => {
         if (!acc[skill.category]) acc[skill.category] = []
         acc[skill.category].push(skill.name)
         return acc
-    }, {} as Record<string, string[]>)
+    }, {})
 
     const skillsFormatted = Object.entries(skillsByCategory)
         .map(([cat, names]) => `**${cat}:** ${names.join(", ")}`)
