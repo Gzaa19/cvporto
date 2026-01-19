@@ -16,8 +16,13 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dev Portfolio | High Fidelity",
-  description: "Professional Developer Portfolio",
+  title: "Portofolio | Gaza Al Ghozali Chansa",
+  description: "UnderGraduate Informatics Student",
+  icons: {
+    icon: "/icons/Icon_website.png",
+    shortcut: "/icons/Icon_website.png",
+    apple: "/icons/Icon_website.png",
+  },
 };
 
 export default function RootLayout({

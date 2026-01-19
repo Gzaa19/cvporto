@@ -277,8 +277,9 @@ body {
    ============================================ */
 
 /* Section Headline - Primary (Solid) - Matches Hero "GAZA" style */
+/* Section Headline - Primary (Solid) - Matches Hero "GAZA" style */
 .headline-primary {
-  font-size: clamp(2.5rem, 10vw, 10rem);
+  font-size: clamp(2rem, 8vw, 7rem);
   font-weight: 700;
   font-family: var(--font-space-mono), ui-monospace, monospace;
   color: white;
@@ -289,7 +290,7 @@ body {
 
 /* Section Headline - Outline Style - Matches Hero "CHANSA" style */
 .headline-outline {
-  font-size: clamp(2.5rem, 10vw, 10rem);
+  font-size: clamp(2rem, 8vw, 7rem);
   font-weight: 700;
   font-family: var(--font-space-mono), ui-monospace, monospace;
   color: transparent;
@@ -306,13 +307,13 @@ body {
 
   .headline-primary,
   .headline-outline {
-    font-size: clamp(2rem, 12vw, 4rem);
+    font-size: clamp(1.75rem, 10vw, 3.5rem);
   }
 }
 
 /* Section Sub-headline / Large Title */
 .headline-secondary {
-  font-size: clamp(1.5rem, 5vw, 6rem);
+  font-size: clamp(1.25rem, 4vw, 4rem);
   font-weight: 700;
   font-family: var(--font-space-mono), ui-monospace, monospace;
   color: white;
@@ -323,7 +324,7 @@ body {
 
 /* Section Label (e.g., "01 / ABOUT") */
 .section-label {
-  font-size: clamp(0.75rem, 2vw, 1rem);
+  font-size: clamp(0.65rem, 1.5vw, 0.875rem);
   font-family: var(--font-space-mono), ui-monospace, monospace;
   color: var(--primary);
   text-transform: uppercase;
@@ -332,7 +333,7 @@ body {
 
 /* Description Text */
 .description-text {
-  font-size: clamp(0.875rem, 2vw, 1.25rem);
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
   color: var(--muted-foreground);
   line-height: 1.6;
 }

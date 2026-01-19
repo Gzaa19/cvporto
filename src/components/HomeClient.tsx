@@ -114,18 +114,31 @@ export default function HomeClient({
                         <Hero heroStatus={heroStatus} />
                         {/* Sticky Parallax Container - About/Projects overlap each other */}
                         <div className="relative">
+                            <div id="about" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             <About aboutContent={aboutContent} />
+
+                            <div id="projects" className="absolute top-[100vh] w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             <Projects projects={projects} />
                         </div>
 
                         {/* Sticky Parallax Container - Skills sticks, Experience slides over */}
+                        {/* Sticky Parallax Container - Skills sticks */}
                         <div className="relative">
+                            <div id="skills" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             <Skills skills={skills} />
+                        </div>
+
+                        {/* Experience slides over */}
+                        <div className="relative">
+                            <div id="experience" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             <Experience experiences={experiences} />
                         </div>
 
                         {/* Github Activity (Server Component passed as child) */}
-                        {children}
+                        <div className="relative">
+                            <div id="github" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
+                            {children}
+                        </div>
                     </main>
                 </div>
 

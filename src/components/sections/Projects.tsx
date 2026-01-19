@@ -39,7 +39,6 @@ export default function Projects({ projects = [] }: ProjectsProps) {
 
     return (
         <section
-            id="projects"
             className="relative bg-background overflow-visible py-24 min-h-screen z-20"
         >
             {/* Background Grid */}

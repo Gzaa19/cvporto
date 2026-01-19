@@ -4,7 +4,6 @@ import { useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Register GSAP plugins
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
@@ -18,15 +17,10 @@ type GsapAnimationConfig = {
     delay?: number;
 };
 
-/**
- * Custom hook untuk GSAP animations
- * Gunakan untuk animasi kompleks yang butuh kontrol lebih (timeline, scroll-linked, morphing, dll)
- */
 export function useGsap<T extends HTMLElement = HTMLDivElement>() {
     const ref = useRef<T>(null);
     const timeline = useRef<gsap.core.Timeline | null>(null);
 
-    // Cleanup on unmount
     useEffect(() => {
         return () => {
             timeline.current?.kill();
@@ -34,7 +28,6 @@ export function useGsap<T extends HTMLElement = HTMLDivElement>() {
         };
     }, []);
 
-    // Basic tween animation
     const animate = useCallback((config: GsapAnimationConfig) => {
         if (!ref.current) return;
 
@@ -67,13 +60,11 @@ export function useGsap<T extends HTMLElement = HTMLDivElement>() {
         }
     }, []);
 
-    // Create a timeline
     const createTimeline = useCallback((config?: gsap.TimelineVars) => {
         timeline.current = gsap.timeline(config);
         return timeline.current;
     }, []);
 
-    // Scroll-triggered animation
     const scrollAnimate = useCallback((
         to: gsap.TweenVars,
         triggerConfig?: Partial<ScrollTrigger.Vars>
@@ -92,7 +83,6 @@ export function useGsap<T extends HTMLElement = HTMLDivElement>() {
         });
     }, []);
 
-    // Horizontal scroll animation
     const horizontalScroll = useCallback((
         container: HTMLElement,
         config?: Partial<ScrollTrigger.Vars>
@@ -115,7 +105,6 @@ export function useGsap<T extends HTMLElement = HTMLDivElement>() {
         });
     }, []);
 
-    // Parallax effect
     const parallax = useCallback((speed: number = 0.5) => {
         if (!ref.current) return;
 
@@ -131,7 +120,6 @@ export function useGsap<T extends HTMLElement = HTMLDivElement>() {
         });
     }, []);
 
-    // Stagger children animation
     const staggerChildren = useCallback((
         to: gsap.TweenVars,
         stagger: number = 0.1,
@@ -151,13 +139,10 @@ export function useGsap<T extends HTMLElement = HTMLDivElement>() {
         });
     }, []);
 
-    // Text reveal animation
     const textReveal = useCallback((config?: { duration?: number; stagger?: number }) => {
         if (!ref.current) return;
 
         const { duration = 0.8, stagger = 0.02 } = config || {};
-
-        // Split text into characters
         const text = ref.current.textContent || "";
         ref.current.innerHTML = text
             .split("")
@@ -189,8 +174,8 @@ export function useGsap<T extends HTMLElement = HTMLDivElement>() {
         parallax,
         staggerChildren,
         textReveal,
-        gsap, // Export gsap instance for advanced usage
-        ScrollTrigger, // Export ScrollTrigger for advanced usage
+        gsap,
+        ScrollTrigger,
     };
 }
 

@@ -137,7 +137,6 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
     return (
         <section
             ref={containerRef}
-            id="skills"
             className={`relative ${sectionHeight} bg-background z-10 overflow-hidden`}
         >
             <div className="w-full h-full flex items-center justify-center">

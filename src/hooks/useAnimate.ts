@@ -14,7 +14,6 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Register GSAP plugins
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
@@ -36,18 +35,12 @@ type PresetConfig = {
     transition?: Transition;
 };
 
-/**
- * Custom hook untuk Framer Motion animations
- * Gunakan untuk animasi React yang bersih dan declarative
- */
 export function useAnimate<T extends HTMLElement = HTMLDivElement>() {
     const ref = useRef<T>(null);
     const controls = useAnimation();
 
-    // Check if element is in view
     const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-    // Start animation
     const start = useCallback(
         async (animation: TargetAndTransition | VariantLabels, transition?: Transition) => {
             await controls.start(animation, transition);
@@ -55,12 +48,9 @@ export function useAnimate<T extends HTMLElement = HTMLDivElement>() {
         [controls]
     );
 
-    // Stop animation
     const stop = useCallback(() => {
         controls.stop();
     }, [controls]);
-
-    // Set animation state immediately
     const set = useCallback(
         (animation: TargetAndTransition | VariantLabels) => {
             controls.set(animation);
@@ -68,7 +58,6 @@ export function useAnimate<T extends HTMLElement = HTMLDivElement>() {
         [controls]
     );
 
-    // Preset animations
     const presets: Record<string, PresetConfig> = {
         fadeIn: {
             initial: { opacity: 0 },
@@ -128,7 +117,6 @@ export function useAnimate<T extends HTMLElement = HTMLDivElement>() {
         },
     };
 
-    // Apply preset animation
     const applyPreset = useCallback(
         async (preset: keyof typeof presets) => {
             const config = presets[preset];
@@ -142,7 +130,6 @@ export function useAnimate<T extends HTMLElement = HTMLDivElement>() {
         [controls, presets]
     );
 
-    // Stagger children helper
     const staggerContainer = {
         hidden: { opacity: 0 },
         show: {
@@ -177,9 +164,6 @@ export function useAnimate<T extends HTMLElement = HTMLDivElement>() {
     };
 }
 
-/**
- * Hook untuk scroll-based animations dengan Framer Motion
- */
 export function useScrollAnimate(options?: {
     target?: React.RefObject<HTMLElement | null>;
     offset?: string[];
@@ -192,14 +176,12 @@ export function useScrollAnimate(options?: {
         offset: (options?.offset || ["start end", "end start"]) as any,
     });
 
-    // Smooth spring version of scroll progress
     const smoothProgress = useSpring(scrollYProgress, {
         stiffness: 100,
         damping: 30,
         restDelta: 0.001,
     });
 
-    // Common transforms
     const createTransform = useCallback(
         (inputRange: number[], outputRange: (number | string)[]) => {
             return useTransform(scrollYProgress, inputRange, outputRange);
@@ -207,26 +189,17 @@ export function useScrollAnimate(options?: {
         [scrollYProgress]
     );
 
-    // Preset scroll transforms
     const transforms = {
-        // Fade in as element enters viewport
         fadeIn: useTransform(scrollYProgress, [0, 0.3], [0, 1]),
-        // Fade out as element leaves viewport
         fadeOut: useTransform(scrollYProgress, [0.7, 1], [1, 0]),
-        // Scale from small to normal
         scaleUp: useTransform(scrollYProgress, [0, 0.5], [0.8, 1]),
-        // Move up as scrolling
         moveUp: useTransform(scrollYProgress, [0, 1], [100, -100]),
-        // Move down as scrolling
         moveDown: useTransform(scrollYProgress, [0, 1], [-100, 100]),
-        // Rotate based on scroll
         rotate: useTransform(scrollYProgress, [0, 1], [0, 360]),
-        // Horizontal scroll (for horizontal scroll sections)
         horizontalScroll: (totalWidth: number) =>
             useTransform(scrollYProgress, [0, 1], ["0%", `-${totalWidth}%`]),
     };
 
-    // Parallax helper
     const parallax = useCallback(
         (speed: number = 0.5) => {
             return useTransform(scrollYProgress, [0, 1], [0, speed * 100]);
@@ -245,10 +218,6 @@ export function useScrollAnimate(options?: {
     };
 }
 
-/**
- * Hook untuk GSAP animations dengan Lenis smooth scroll
- * Gunakan ini sebagai pengganti Framer Motion untuk animasi scroll yang lebih kompleks
- */
 export function useGsapAnimate<T extends HTMLElement = HTMLDivElement>(
     config?: gsap.TweenVars & {
         scrollTrigger?: Omit<ScrollTrigger.Vars, "trigger">;
@@ -265,9 +234,7 @@ export function useGsapAnimate<T extends HTMLElement = HTMLDivElement>(
             if (!ref.current) return;
 
             if (config?.scrollTrigger) {
-                // Scroll-triggered animation
                 const { scrollTrigger, ...tweenVars } = config;
-                // scrollTrigger disini pasti bukan undefined karena sudah di-check di if condition
                 const stVars: Omit<ScrollTrigger.Vars, "trigger"> = scrollTrigger!;
 
                 const scrollTriggerConfig: ScrollTrigger.Vars = {
@@ -284,7 +251,6 @@ export function useGsapAnimate<T extends HTMLElement = HTMLDivElement>(
                 });
                 scrollTriggerRef.current = animationRef.current.scrollTrigger as ScrollTrigger;
             } else if (config) {
-                // Regular animation
                 animationRef.current = gsap.to(ref.current, config);
             }
         }, ref);
@@ -295,7 +261,6 @@ export function useGsapAnimate<T extends HTMLElement = HTMLDivElement>(
         };
     }, [config]);
 
-    // Helper methods
     const play = useCallback(() => {
         animationRef.current?.play();
     }, []);
@@ -323,10 +288,6 @@ export function useGsapAnimate<T extends HTMLElement = HTMLDivElement>(
     };
 }
 
-/**
- * Hook untuk membuat scroll-triggered animations dengan GSAP
- * Cocok untuk animasi yang lebih kompleks dan performant
- */
 export function useScrollTriggerAnimate() {
     const ctx = useRef<gsap.Context | null>(null);
 
@@ -381,9 +342,6 @@ export function useScrollTriggerAnimate() {
     };
 }
 
-/**
- * Hook untuk hover animations
- */
 export function useHoverAnimate() {
     const presets = {
         lift: {

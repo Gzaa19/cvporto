@@ -16,7 +16,7 @@ function createPrismaClient() {
 
     const pool = globalForPrisma.pool ?? new Pool({
         connectionString,
-        max: 1, // Restrict connection pool to avoid exhaustion in dev
+        max: 1,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 2000,
     });

@@ -43,7 +43,6 @@ export default function About({ aboutContent }: AboutProps) {
     return (
         <section
             ref={sectionRef}
-            id="about"
             className="h-screen sticky top-0 flex items-center justify-center bg-background text-foreground overflow-hidden z-10"
             style={{ zIndex: 10 }}
         >

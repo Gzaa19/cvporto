@@ -10,7 +10,7 @@ export function useMediaQuery(query: string): boolean {
         }
 
         const listener = () => setMatches(media.matches);
-        window.addEventListener("resize", listener); // Fallback or additional trigger if needed, but matchMedia listener is better.
+        window.addEventListener("resize", listener);
         media.addEventListener("change", listener);
 
         return () => {

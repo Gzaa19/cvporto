@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const secretKey = "secret-key-change-this-in-env"; // TODO: Move to .env
+const secretKey = "secret-key-change-this-in-env";
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: any) {
@@ -25,18 +25,11 @@ export async function decrypt(input: string): Promise<any> {
 }
 
 export async function login(formData: FormData) {
-    // Simple hardcoded check for demo purposes OR database check
-    // For now let's use the AdminUser model but seed it if empty
-    // Actually, for simplicity in this turn, let's just assume one admin user.
-
-    // Verify credentials (placeholder logic, will implement db check in actions)
     const user = { email: "admin@example.com", name: "Admin" };
 
-    // Create the session
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     const session = await encrypt({ user, expires });
 
-    // Save the session in a cookie
     (await cookies()).set("session", session, { expires, httpOnly: true });
 }
 
@@ -54,7 +47,6 @@ export async function updateSession(request: NextRequest) {
     const session = request.cookies.get("session")?.value;
     if (!session) return;
 
-    // Refresh the session so it doesn't expire
     const parsed = await decrypt(session);
     parsed.expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     const res = NextResponse.next();

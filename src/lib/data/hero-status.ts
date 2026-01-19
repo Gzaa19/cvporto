@@ -5,7 +5,6 @@ export async function getHeroStatusData() {
         let status = await prisma.heroStatus.findFirst();
 
         if (!status) {
-            // Return default values if no record exists
             return {
                 location: "INDONESIA",
                 currentRole: "FRONT END",
@@ -22,7 +21,6 @@ export async function getHeroStatusData() {
         };
     } catch (error) {
         console.error("Error fetching hero status:", error);
-        // Return defaults on error
         return {
             location: "INDONESIA",
             currentRole: "FRONT END",

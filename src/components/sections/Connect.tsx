@@ -25,7 +25,7 @@ const contactLinks = [
 
 export default function Footer() {
     return (
-        <footer className="fixed bottom-0 left-0 right-0 h-[350px] z-0 overflow-hidden">
+        <footer id="connect" className="fixed bottom-0 left-0 right-0 h-[350px] z-0 overflow-hidden">
             {/* Background Image */}
             <Image
                 src={footerBg}
