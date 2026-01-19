@@ -35,8 +35,8 @@ const SkillCard = ({
     const isNextJs = skill.iconName === "Next.js";
 
     return (
-        <div className={`h-[100px] md:h-[160px] ${className}`}>
-            <Card className="h-full group p-3 md:p-4 border-t border-white/10 border-l-0 border-r-0 border-b-0 rounded-none bg-transparent shadow-none hover:bg-transparent transition-colors duration-300 cursor-default flex flex-col justify-between">
+        <div className={`h-[90px] md:h-[160px] ${className}`}>
+            <Card className="h-full group p-2 md:p-4 border-t border-white/10 border-l-0 border-r-0 border-b-0 rounded-none bg-transparent shadow-none hover:bg-transparent transition-colors duration-300 cursor-default flex flex-col justify-between">
                 <div className="flex justify-between items-start mb-1 md:mb-2">
                     <span className="text-[10px] md:text-xs font-mono text-neutral-500">
                         {skill.number}
@@ -52,10 +52,10 @@ const SkillCard = ({
                 </div>
 
                 <div className="space-y-0.5 md:space-y-1">
-                    <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-primary transition-colors duration-300">
+                    <h3 className="text-sm md:text-xl font-bold font-mono text-white group-hover:text-primary transition-colors duration-300 uppercase tracking-tight truncate">
                         {skill.name}
                     </h3>
-                    <p className="text-[9px] md:text-xs text-neutral-400">
+                    <p className="text-[8px] md:text-xs font-mono text-neutral-400 uppercase tracking-wider truncate">
                         {skill.category}
                     </p>
                 </div>
@@ -184,9 +184,9 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
                             </div>
                         </div>
                     ) : (
-                        <div className="text-center text-muted-foreground font-mono z-20">
-                            <h2 className="text-2xl font-bold text-white mb-2">TECH STACK</h2>
-                            <p>No skills added yet.</p>
+                        <div className="text-center z-20">
+                            <h2 className="headline-secondary text-white mb-4">TECH STACK</h2>
+                            <p className="section-label text-muted-foreground">No skills added yet.</p>
                         </div>
                     )}
                 </div>

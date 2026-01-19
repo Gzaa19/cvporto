@@ -64,10 +64,10 @@ export default function AdminAboutForm({ initialData }: { initialData: AboutCont
                     Intro Text (Main Description)
                 </label>
                 <textarea
-                    rows={3}
+                    rows={5}
                     value={formData.introText}
                     onChange={(e) => setFormData({ ...formData, introText: e.target.value })}
-                    className="w-full px-4 py-3 bg-background border border-white/20 rounded-lg text-white font-mono focus:border-primary focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-background border border-white/20 rounded-lg text-white font-mono focus:border-primary focus:outline-none transition-colors min-h-[120px]"
                 />
             </div>
 
@@ -77,10 +77,10 @@ export default function AdminAboutForm({ initialData }: { initialData: AboutCont
                     Focus Text (Secondary Description)
                 </label>
                 <textarea
-                    rows={3}
+                    rows={5}
                     value={formData.focusText}
                     onChange={(e) => setFormData({ ...formData, focusText: e.target.value })}
-                    className="w-full px-4 py-3 bg-background border border-white/20 rounded-lg text-white font-mono focus:border-primary focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-background border border-white/20 rounded-lg text-white font-mono focus:border-primary focus:outline-none transition-colors min-h-[120px]"
                 />
             </div>
 

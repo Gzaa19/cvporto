@@ -71,7 +71,7 @@ export default function About({ aboutContent }: AboutProps) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, ease: "easeOut" }}
                                 viewport={{ once: false, amount: 0.3 }}
-                                className="text-6xl md:text-8xl font-bold tracking-tight text-white leading-[0.9]"
+                                className="headline-primary"
                             >
                                 PASSIONATE
                             </motion.h2>
@@ -84,15 +84,15 @@ export default function About({ aboutContent }: AboutProps) {
                                 viewport={{ once: false, amount: 0.3 }}
                                 className="space-y-6 max-w-lg"
                             >
-                                <p className="text-xl text-muted-foreground leading-relaxed">
-                                    {aboutContent?.greeting || "Hi, I'm"} <span className="bg-primary/10 text-primary px-1">{aboutContent?.name || "Gaza Chansa"}</span>, {aboutContent?.introText || "A Software Engineer who loves building modern web applications with cutting-edge technologies."}
+                                <p className="description-text">
+                                    {aboutContent?.greeting || "Hi, I'm"} <span className="bg-primary/10 text-primary px-1 font-medium">{aboutContent?.name || "Gaza Chansa"}</span>, {aboutContent?.introText || "A Software Engineer who loves building modern web applications with cutting-edge technologies."}
                                 </p>
-                                <p className="text-lg text-muted-foreground/80 font-light">
+                                <p className="description-text opacity-80">
                                     {aboutContent?.focusText || "Currently focusing on creating interactions that feel natural and performance that feels instantaneous."}
                                 </p>
 
                                 <div className="pt-6">
-                                    <a href="#experience" className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.2em] text-white hover:text-primary transition-colors group">
+                                    <a href="#experience" className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.2em] text-white hover:text-primary transition-colors group font-mono">
                                         View Experience
                                         <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
                                     </a>
@@ -115,7 +115,7 @@ export default function About({ aboutContent }: AboutProps) {
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: false, amount: 0.3 }}
                                     transition={{ delay: 0.3 }}
-                                    className="block text-xs font-mono text-muted-foreground uppercase tracking-[0.2em]"
+                                    className="section-label opacity-60"
                                 >
                                     // Projects
                                 </motion.span>
@@ -125,7 +125,7 @@ export default function About({ aboutContent }: AboutProps) {
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: false, amount: 0.3 }}
                                     transition={{ delay: 0.4 }}
-                                    className="text-4xl md:text-6xl font-bold text-white leading-tight"
+                                    className="headline-secondary"
                                 >
                                     SCROLL TO<br />
                                     EXPLORE

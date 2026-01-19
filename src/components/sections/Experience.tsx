@@ -6,38 +6,33 @@ import { BackgroundGrid } from "@/components/ui/background-grid";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import ExperienceCard from "@/components/ui/ExperienceCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const experiences = [
-    {
-        role: "Senior Frontend Engineer",
-        company: "TechCorp Inc.",
-        period: "2023 - Present",
-        description: "Leading the frontend team in building a next-generation SaaS platform. Implemented micro-frontends architecture and improved performance by 40%."
-    },
-    {
-        role: "Full Stack Developer",
-        company: "Creative Solutions",
-        period: "2021 - 2023",
-        description: "Developed and maintained multiple client projects using React, Node.js, and AWS. Collaborated with designers to deliver pixel-perfect UIs."
-    },
-    {
-        role: "Junior Web Developer",
-        company: "StartUp Hub",
-        period: "2019 - 2021",
-        description: "Worked on the core product team, implementing new features and fixing bugs. Gained hands-on experience with modern web technologies."
-    },
-];
+interface Experience {
+    id: string;
+    role: string;
+    company: string;
+    location: string;
+    workType: string;
+    period: string;
+    description: string;
+    order: number;
+}
 
-export default function Experience() {
+interface ExperienceProps {
+    experiences?: Experience[];
+}
+
+export default function Experience({ experiences = [] }: ExperienceProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
         const content = contentRef.current;
         const container = containerRef.current;
-        if (!content || !container) return;
+        if (!content || !container || experiences.length === 0) return;
 
         // Calculate the total scrollable width
         // We subtract the viewport width to know how much we need to translate left
@@ -63,7 +58,23 @@ export default function Experience() {
             ease: "none"
         });
 
-    }, { scope: containerRef });
+    }, { scope: containerRef, dependencies: [experiences] });
+
+    // If no experiences, show minimal height section
+    if (experiences.length === 0) {
+        return (
+            <section
+                id="experience"
+                className="relative min-h-[50vh] bg-background z-50 flex items-center justify-center"
+            >
+                <BackgroundGrid />
+                <div className="text-center">
+                    <SectionHeading number="04" title="EXPERIENCE" className="mb-4" />
+                    <p className="text-muted-foreground">No experience added yet.</p>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section
@@ -77,12 +88,12 @@ export default function Experience() {
 
                 <div
                     ref={contentRef}
-                    className="flex gap-16 items-center pl-12 md:pl-24 pr-12 min-w-full w-max will-change-transform"
+                    className="flex gap-6 md:gap-16 items-center pl-4 md:pl-24 pr-4 md:pr-12 min-w-full w-max will-change-transform"
                 >
                     {/* Header - Part of the scroll flow now */}
-                    <div className="flex-shrink-0 w-[300px] md:w-[400px] text-left">
-                        <SectionHeading number="04" title="EXPERIENCE" className="mb-4" />
-                        <h2 className="text-5xl md:text-7xl font-bold text-white leading-tight">
+                    <div className="flex-shrink-0 w-[200px] md:w-[400px] text-left">
+                        <SectionHeading number="04" title="EXPERIENCE" className="mb-2 md:mb-4" />
+                        <h2 className="headline-secondary text-3xl md:text-5xl lg:text-7xl">
                             My <br />
                             <span className="text-white/20">Journey</span>
                         </h2>
@@ -90,30 +101,16 @@ export default function Experience() {
 
                     {/* Cards */}
                     {experiences.map((exp, index) => (
-                        <div
-                            key={index}
-                            className="group relative flex-shrink-0 w-[400px] md:w-[500px] p-8 md:p-12 bg-[#0d0d0d] border border-white/10 hover:border-primary/50 transition-colors duration-500"
-                        >
-                            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <span className="text-6xl font-bold text-white font-mono">0{index + 1}</span>
-                            </div>
-
-                            <div className="space-y-6 relative z-10">
-                                <div className="space-y-2">
-                                    <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-primary transition-colors">
-                                        {exp.role}
-                                    </h3>
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 text-muted-foreground/80 font-mono text-sm">
-                                        <span className="text-primary/80">{exp.company}</span>
-                                        <span className="px-3 py-1 rounded-full border border-white/10">{exp.period}</span>
-                                    </div>
-                                </div>
-
-                                <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
-                                    {exp.description}
-                                </p>
-                            </div>
-                        </div>
+                        <ExperienceCard
+                            key={exp.id}
+                            index={index}
+                            role={exp.role}
+                            company={exp.company}
+                            location={exp.location}
+                            workType={exp.workType}
+                            period={exp.period}
+                            description={exp.description}
+                        />
                     ))}
                 </div>
             </div>

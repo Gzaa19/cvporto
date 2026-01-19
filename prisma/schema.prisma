@@ -46,6 +46,7 @@ model AdminUser {
 model Project {
   id          String   @id @default(cuid())
   title       String
+  subtitle    String   @default("")
   description String
   tags        String
   imageUrl    String?
@@ -65,4 +66,18 @@ model Skill {
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Experience / Work History Model
+model Experience {
+  id          String   @id @default(cuid())
+  role        String
+  company     String
+  location    String   @default("")
+  workType    String   @default("On-site")
+  period      String
+  description String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

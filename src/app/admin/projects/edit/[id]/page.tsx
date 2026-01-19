@@ -1,10 +1,11 @@
 import { getProject } from "@/actions/projects";
-import AdminProjectForm from "../AdminProjectComponents";
+import AdminProjectForm from "../../AdminProjectComponents";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function EditProjectPage({ params }: { params: { id: string } }) {
+export default async function EditProjectPage(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const project = await getProject(params.id);
 
     if (!project) {

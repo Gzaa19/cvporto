@@ -4,6 +4,7 @@ import { getHeroStatusData } from "@/lib/data/hero-status";
 import { getAboutContentData } from "@/lib/data/about-content";
 import { getProjectsData } from "@/lib/data/projects";
 import { getSkillsData } from "@/lib/data/skills";
+import { getExperiencesData } from "@/lib/data/experiences";
 
 export const dynamic = "force-dynamic";
 
@@ -12,9 +13,10 @@ export default async function Home() {
   const aboutContent = await getAboutContentData();
   const projects = await getProjectsData();
   const skills = await getSkillsData();
+  const experiences = await getExperiencesData();
 
   return (
-    <HomeClient heroStatus={heroStatus} aboutContent={aboutContent} projects={projects} skills={skills}>
+    <HomeClient heroStatus={heroStatus} aboutContent={aboutContent} projects={projects} skills={skills} experiences={experiences}>
       <GithubActivity />
     </HomeClient>
   );

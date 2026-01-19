@@ -6,6 +6,7 @@ import { Section } from "@/components/ui/section";
 import { Container } from "@/components/ui/container";
 import { Card } from "@/components/ui/card";
 import { BackgroundGrid } from "@/components/ui/background-grid";
+import AnimatedMascot from "@/components/ui/AnimatedMascot";
 
 interface GithubActivityClientProps {
     user: any;
@@ -126,14 +127,14 @@ export default function GithubActivityClient({ user }: GithubActivityClientProps
                             <h2 className="headline-primary">
                                 GITHUB
                             </h2>
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2 md:gap-4">
                                 <h2 className="headline-outline">
                                     ACTIVITY
                                 </h2>
-                                {/* Animated Github Icon */}
-                                <motion.div variants={iconFloatVariant} animate="animate">
-                                    <Github className="w-16 h-16 text-white fill-white hidden md:block" />
-                                </motion.div>
+                                {/* Animated Octocat Mascot - visible on all screens */}
+                                <div className="z-50 -mb-2 md:-mb-4">
+                                    <AnimatedMascot />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -169,7 +170,7 @@ export default function GithubActivityClient({ user }: GithubActivityClientProps
                             </div>
 
                             <div className="flex flex-col gap-1 w-full overflow-hidden">
-                                <h3 className="text-xl font-black text-white uppercase truncate">{name}</h3>
+                                <h3 className="text-xl font-black font-mono text-white uppercase truncate tracking-tight">{name}</h3>
                                 <p className="text-muted-foreground text-sm font-mono truncate mb-2">@{login}</p>
 
                                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] md:text-xs font-mono text-muted-foreground">

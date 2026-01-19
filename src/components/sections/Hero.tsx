@@ -61,16 +61,16 @@ export default function Hero({ heroStatus }: HeroProps) {
                 />
             </motion.div>
 
-            {/* Content Container - Aligned Left */}
-            <div className="z-10 pl-4 md:pl-8 pr-6 md:pr-12 h-full flex flex-col justify-center md:justify-end pb-32 md:pb-48">
+            {/* Content Container - Centered on Mobile, Left on Desktop */}
+            <div className="z-10 px-4 md:px-8 lg:pr-12 h-full flex flex-col justify-center items-center md:items-start md:justify-end pb-16 md:pb-48">
 
-                {/* Main Text Area - Aligned Left */}
-                <div className="mb-12 md:mb-16 w-full flex flex-col items-start">
+                {/* Main Text Area - Centered on Mobile, Left on Desktop */}
+                <div className="mb-8 md:mb-16 w-full flex flex-col items-center md:items-start text-center md:text-left">
                     {/* Name Part 1: Solid - Moves Left */}
                     <div className="overflow-hidden w-fit">
                         <StaggeredText
                             text="GAZA"
-                            className="text-6xl md:text-[8rem] font-bold tracking-tighter text-white leading-[0.85] font-mono"
+                            className="headline-primary tracking-tighter"
                             direction="up"
                             mode="char"
                             scrollDirection="left"
@@ -78,46 +78,34 @@ export default function Hero({ heroStatus }: HeroProps) {
                     </div>
 
                     {/* Name Part 2: Outlined - Moves Right */}
-                    <div className="overflow-hidden w-fit -mt-2 md:-mt-4">
+                    <div className="overflow-hidden w-fit -mt-1 md:-mt-4">
                         <StaggeredText
                             text="CHANSA"
-                            className="text-6xl md:text-[8rem] font-bold tracking-tighter text-transparent leading-[0.85] stroke-text font-mono"
+                            className="headline-outline tracking-tighter"
                             direction="up"
                             mode="char"
                             scrollDirection="right"
                         />
-                        {/* CSS variable for stroke text hack if needed, or inline style. Tailwind doesn't have standard text-stroke support without plugin. */}
-                        <style jsx global>{`
-                            .stroke-text {
-                                -webkit-text-stroke: 2px rgba(255, 255, 255, 0.5);
-                                color: transparent;
-                            }
-                            @media (max-width: 768px) {
-                                .stroke-text {
-                                    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
-                                }
-                            }
-                        `}</style>
                     </div>
 
                     {/* Subtitle - Moves Left */}
-                    <div className="overflow-hidden w-fit mt-6 md:mt-10">
+                    <div className="overflow-hidden w-fit mt-4 md:mt-10">
                         <StaggeredText
                             text={heroStatus.subtitle}
-                            className="text-base md:text-xl font-medium tracking-[0.2em] text-muted-foreground font-mono"
+                            className="section-label text-muted-foreground"
                             direction="left"
                             scrollDirection="left"
                         />
                     </div>
                 </div>
 
-                {/* Bottom Status Cards - Separated with gaps */}
+                {/* Bottom Status Cards - Centered on Mobile */}
                 <ScrollHideContent>
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1, duration: 0.8 }}
-                        className="flex flex-wrap gap-4 md:gap-6"
+                        className="flex flex-wrap justify-center md:justify-start gap-3 md:gap-6"
                     >
                         {/* Card 1 - Location */}
                         <div className="p-3 md:p-5 border border-white/20 bg-background/30 backdrop-blur-sm min-w-[130px] md:min-w-[160px]">

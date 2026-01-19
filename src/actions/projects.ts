@@ -20,6 +20,7 @@ export async function getProject(id: string) {
 // Create Project
 export async function createProject(data: {
     title: string;
+    subtitle: string;
     description: string;
     tags: string;
     imageUrl?: string;
@@ -30,6 +31,7 @@ export async function createProject(data: {
     const project = await prisma.project.create({
         data: {
             title: data.title,
+            subtitle: data.subtitle,
             description: data.description,
             tags: data.tags,
             imageUrl: data.imageUrl,
@@ -47,6 +49,7 @@ export async function createProject(data: {
 // Update Project
 export async function updateProject(id: string, data: {
     title?: string;
+    subtitle?: string;
     description?: string;
     tags?: string;
     imageUrl?: string;
@@ -58,6 +61,7 @@ export async function updateProject(id: string, data: {
         where: { id },
         data: {
             title: data.title,
+            subtitle: data.subtitle,
             description: data.description,
             tags: data.tags,
             imageUrl: data.imageUrl,

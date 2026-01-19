@@ -74,7 +74,7 @@ export default function Footer() {
 
                     {/* Left Side - Headline */}
                     <div>
-                        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] uppercase tracking-tight">
+                        <h2 className="headline-primary">
                             LET&apos;S
                             <br />
                             CONNECT

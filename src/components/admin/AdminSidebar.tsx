@@ -13,10 +13,14 @@ export default function AdminSidebar() {
         { name: "About Settings", href: "/admin/about" },
         { name: "Project Settings", href: "/admin/projects" },
         { name: "Tech Stack", href: "/admin/skills" },
+        { name: "Experience", href: "/admin/experience" },
     ];
 
     return (
-        <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-white/10 bg-[#0a0a0a]">
+        <aside
+            className="h-dvh w-full border-r border-white/10 bg-[#0a0a0a] flex flex-col sticky top-0 overflow-y-auto"
+            data-lenis-prevent
+        >
             <div className="flex h-16 items-center border-b border-white/10 px-6">
                 <h1 className="text-xl font-bold font-mono tracking-tighter text-white">
                     Gaza/Admin

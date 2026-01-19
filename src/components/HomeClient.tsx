@@ -7,7 +7,7 @@ import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
 import Skills from "@/components/sections/Skills";
 import Experience from "@/components/sections/Experience";
-import Footer from "@/components/sections/Footer";
+import Footer from "@/components/sections/Connect";
 import LoadingScreen from "@/components/LoadingScreen";
 
 interface HeroStatusData {
@@ -27,11 +27,24 @@ interface AboutContentData {
 interface Project {
     id: string;
     title: string;
+    subtitle: string;
     description: string;
     tags: string;
     imageUrl?: string | null;
     projectUrl?: string | null;
     githubUrl?: string | null;
+    order: number;
+}
+
+interface Experience {
+    id: string;
+    role: string;
+    company: string;
+    location: string;
+    workType: string;
+    period: string;
+    description: string;
+    order: number;
 }
 
 interface Skill {
@@ -48,6 +61,7 @@ interface HomeClientProps {
     aboutContent: AboutContentData;
     projects: Project[];
     skills: Skill[];
+    experiences: Experience[];
 }
 
 
@@ -57,7 +71,8 @@ export default function HomeClient({
     heroStatus,
     aboutContent,
     projects = [],
-    skills = []
+    skills = [],
+    experiences = []
 }: HomeClientProps) {
     const [showLoading, setShowLoading] = useState(true);
 
@@ -83,7 +98,7 @@ export default function HomeClient({
             clearTimeout(t2);
             clearTimeout(t3);
         };
-    }, [projects.length, skills.length]); // Track length changes specifically to avoid deep object diff issues
+    }, [projects.length, skills.length, experiences.length]); // Track length changes specifically to avoid deep object diff issues
 
     return (
         <>
@@ -106,7 +121,7 @@ export default function HomeClient({
                         {/* Sticky Parallax Container - Skills sticks, Experience slides over */}
                         <div className="relative">
                             <Skills skills={skills} />
-                            <Experience />
+                            <Experience experiences={experiences} />
                         </div>
 
                         {/* Github Activity (Server Component passed as child) */}
