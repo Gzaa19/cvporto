@@ -23,7 +23,7 @@ async function buildRAGContext() {
         return acc
     }, {})
 
-    const skillsFormatted = Object.entries(skillsByCategory)
+    const skillsFormatted = (Object.entries(skillsByCategory) as [string, string[]][])
         .map(([cat, names]) => `**${cat}:** ${names.join(", ")}`)
         .join("\n")
 
