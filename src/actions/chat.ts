@@ -27,8 +27,8 @@ async function buildRAGContext() {
         .map(([cat, names]) => `**${cat}:** ${names.join(", ")}`)
         .join("\n")
 
-    const projectsFormatted = projects.map((p, idx) => {
-        const links = []
+    const projectsFormatted = projects.map((p: { title: string; description: string; tags: string; projectUrl: string | null; githubUrl: string | null }, idx: number) => {
+        const links: string[] = []
         if (p.projectUrl) links.push(`Live: ${p.projectUrl}`)
         if (p.githubUrl) links.push(`GitHub: ${p.githubUrl}`)
         return `${idx + 1}. **${p.title}**
