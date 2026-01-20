@@ -4,7 +4,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Lenis Smooth Scroll */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -71,20 +70,13 @@ html.lenis body {
 :root {
   --background: #03040d;
   --foreground: #f8fafc;
-  /* Snow White */
-
-  /* Ice Blue / Cyan Neon Accent */
   --primary: #22d3ee;
   --primary-foreground: #03040d;
-
-  /* Deep Slate/Navy for Cards */
   --card: #0f172a;
   --card-foreground: #f8fafc;
 
   --popover: #0f172a;
   --popover-foreground: #f8fafc;
-
-  /* Muted Slate Blue */
   --secondary: #1e293b;
   --secondary-foreground: #22d3ee;
 
@@ -102,18 +94,11 @@ html.lenis body {
   --ring: #22d3ee;
 
   --radius: 0.5rem;
-
-  /* Charts - Cool Tones */
   --chart-1: #22d3ee;
-  /* Cyan */
   --chart-2: #3b82f6;
-  /* Blue */
   --chart-3: #6366f1;
-  /* Indigo */
   --chart-4: #818cf8;
-  /* Light Indigo */
   --chart-5: #a5b4fc;
-  /* Pale Indigo */
 }
 
 body {
@@ -122,7 +107,6 @@ body {
   font-family: var(--font-sans), sans-serif;
 }
 
-/* Custom Scrollbar - Thin & Subtle */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -141,7 +125,6 @@ body {
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* Scrollbar Thin Utility - More Visible for Admin */
 .scrollbar-thin::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -162,13 +145,11 @@ body {
   background-color: #a3a3a3;
 }
 
-/* Firefox scrollbar */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
-/* Noise Texture Overlay */
 .bg-noise {
   position: relative;
 }
@@ -186,19 +167,15 @@ body {
   z-index: 50;
 }
 
-/* Scrollbar hiding for horizontal scroll */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
 .no-scrollbar {
   -ms-overflow-style: none;
-  /* IE and Edge */
   scrollbar-width: none;
-  /* Firefox */
 }
 
-/* Runner bounce animation */
 @keyframes bounce-run {
 
   0%,
@@ -219,7 +196,6 @@ body {
   }
 }
 
-/* Marquee infinite scroll animation */
 @keyframes marquee {
   0% {
     transform: translateX(0%);
@@ -234,11 +210,6 @@ body {
   animation: marquee 20s linear infinite;
 }
 
-/* ============================================
-   REUSABLE UTILITY CLASSES
-   ============================================ */
-
-/* Background Grid Pattern */
 .bg-grid {
   position: absolute;
   inset: 0;
@@ -249,7 +220,6 @@ body {
   z-index: 0;
 }
 
-/* Giant Watermark Text */
 .watermark-text {
   position: absolute;
   inset: 0;
@@ -262,7 +232,6 @@ body {
   z-index: 0;
 }
 
-/* Scrollbar Hide Utility */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -272,12 +241,6 @@ body {
   display: none;
 }
 
-/* ============================================
-   TYPOGRAPHY UTILITIES
-   ============================================ */
-
-/* Section Headline - Primary (Solid) - Matches Hero "GAZA" style */
-/* Section Headline - Primary (Solid) - Matches Hero "GAZA" style */
 .headline-primary {
   font-size: clamp(2rem, 8vw, 7rem);
   font-weight: 700;
@@ -288,7 +251,6 @@ body {
   text-transform: uppercase;
 }
 
-/* Section Headline - Outline Style - Matches Hero "CHANSA" style */
 .headline-outline {
   font-size: clamp(2rem, 8vw, 7rem);
   font-weight: 700;
@@ -311,7 +273,6 @@ body {
   }
 }
 
-/* Section Sub-headline / Large Title */
 .headline-secondary {
   font-size: clamp(1.25rem, 4vw, 4rem);
   font-weight: 700;
@@ -322,7 +283,6 @@ body {
   text-transform: uppercase;
 }
 
-/* Section Label (e.g., "01 / ABOUT") */
 .section-label {
   font-size: clamp(0.65rem, 1.5vw, 0.875rem);
   font-family: var(--font-space-mono), ui-monospace, monospace;
@@ -331,9 +291,24 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* Description Text */
 .description-text {
   font-size: clamp(0.8rem, 1.5vw, 1rem);
   color: var(--muted-foreground);
   line-height: 1.6;
+}
+
+next-route-announcer,
+#next-route-announcer {
+  display: none !important;
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+script,
+style {
+  display: none !important;
 }

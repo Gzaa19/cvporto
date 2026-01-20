@@ -77,18 +77,14 @@ export default function HomeClient({
     const [showLoading, setShowLoading] = useState(true);
 
     useEffect(() => {
-        // Trigger a resize event to ensure ScrollTrigger and Sticky elements recalculate positions
-        // This is crucial when content height changes due to data loading (or lack thereof)
         const triggerResize = () => {
             if (typeof window !== 'undefined') {
                 window.dispatchEvent(new Event('resize'));
             }
         };
 
-        // Immediate trigger
         triggerResize();
 
-        // Delayed triggers to handle layout settling
         const t1 = setTimeout(triggerResize, 100);
         const t2 = setTimeout(triggerResize, 500);
         const t3 = setTimeout(triggerResize, 1000);
@@ -98,21 +94,17 @@ export default function HomeClient({
             clearTimeout(t2);
             clearTimeout(t3);
         };
-    }, [projects.length, skills.length, experiences.length]); // Track length changes specifically to avoid deep object diff issues
-
+    }, [projects.length, skills.length, experiences.length]);
     return (
         <>
             {showLoading && <LoadingScreen onComplete={() => setShowLoading(false)} />}
-
-            {/* Wrapper Utama untuk Parallax Footer */}
             <div className="relative">
 
-                {/* MAIN CONTENT (TIRAI) - z-10, bg solid, shadow, mb = footer height */}
                 <div className="relative z-10 bg-background shadow-2xl mb-[350px]">
                     <Header />
                     <main className="flex flex-col w-full">
                         <Hero heroStatus={heroStatus} />
-                        {/* Sticky Parallax Container - About/Projects overlap each other */}
+
                         <div className="relative">
                             <div id="about" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             <About aboutContent={aboutContent} />
@@ -121,20 +113,16 @@ export default function HomeClient({
                             <Projects projects={projects} />
                         </div>
 
-                        {/* Sticky Parallax Container - Skills sticks, Experience slides over */}
-                        {/* Sticky Parallax Container - Skills sticks */}
                         <div className="relative">
                             <div id="skills" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             <Skills skills={skills} />
                         </div>
 
-                        {/* Experience slides over */}
                         <div className="relative">
                             <div id="experience" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             <Experience experiences={experiences} />
                         </div>
 
-                        {/* Github Activity (Server Component passed as child) */}
                         <div className="relative">
                             <div id="github" className="absolute top-0 w-full h-px -translate-y-24 visibility-hidden pointer-events-none" />
                             {children}
@@ -142,7 +130,6 @@ export default function HomeClient({
                     </main>
                 </div>
 
-                {/* FOOTER (YANG NGUMPET) - fixed di bawah, z-0 */}
                 <Footer />
             </div>
         </>

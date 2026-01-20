@@ -15,7 +15,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     const [scope, animate] = useAnimate();
     const textRef = useRef<HTMLHeadingElement>(null);
 
-    // Typing effect
     useEffect(() => {
         let currentIndex = 0;
         let timeoutId: NodeJS.Timeout;
@@ -25,10 +24,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 currentIndex++;
             } else {
                 clearInterval(typingInterval);
-                // Short pause after typing, then start zoom
-                timeoutId = setTimeout(() => setTypingComplete(true), 300);
+                timeoutId = setTimeout(() => setTypingComplete(true), 800);
             }
-        }, 80); // Typing speed
+        }, 60);
 
         return () => {
             clearInterval(typingInterval);
@@ -36,21 +34,35 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         };
     }, []);
 
-    // Zoom animation after typing is complete
     useEffect(() => {
         if (typingComplete && textRef.current) {
-            // Animate the text to zoom through
-            animate(textRef.current,
-                { scale: 50, opacity: 0 },
-                {
-                    duration: 1.2,
-                    ease: [0.76, 0, 0.24, 1],
-                }
-            ).then(() => {
-                // Fade out the entire container after zoom
+            const sequence = async () => {
+                if (!textRef.current) return;
+
+                await animate(textRef.current,
+                    { scale: 1.1, filter: "blur(0px)" },
+                    { duration: 0.5, ease: "easeInOut" }
+                );
+
+                if (!textRef.current) return;
+
+                await animate(textRef.current,
+                    {
+                        scale: 100,
+                        opacity: 0,
+                        filter: "blur(10px)"
+                    },
+                    {
+                        duration: 0.8,
+                        ease: [0.76, 0, 0.24, 1],
+                    }
+                );
+
                 setIsVisible(false);
                 setTimeout(onComplete, 300);
-            });
+            };
+
+            sequence();
         }
     }, [typingComplete, animate, onComplete]);
 
@@ -59,23 +71,39 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             {isVisible && (
                 <motion.div
                     ref={scope}
-                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden"
+                    className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background overflow-hidden"
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
                 >
-                    <motion.h1
-                        ref={textRef}
-                        className="text-4xl md:text-6xl font-bold text-white font-mono whitespace-nowrap"
-                        style={{ transformOrigin: "52% 50%" }}
-                        initial={{ opacity: 1, scale: 1 }}
+                    <div className="relative">
+                        <motion.h1
+                            ref={textRef}
+                            className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground font-mono tracking-tight text-center"
+                            style={{ transformOrigin: "center center" }}
+                            initial={{ opacity: 1, scale: 1 }}
+                        >
+                            <span>{displayedText}</span>
+                            {!typingComplete && (
+                                <motion.span
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                                    className="inline-block w-[2px] h-8 md:h-12 ml-1 bg-primary align-middle"
+                                />
+                            )}
+                        </motion.h1>
+
+                        <div className="absolute -bottom-4 left-0 w-full h-px bg-linear-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-1000" style={{ opacity: typingComplete ? 0 : 0.5 }}></div>
+                    </div>
+
+                    <motion.div
+                        className="absolute bottom-10 text-xs font-sans text-muted-foreground tracking-[0.3em] uppercase opacity-50"
+                        animate={{ opacity: typingComplete ? 0 : 0.5, y: typingComplete ? 20 : 0 }}
+                        transition={{ duration: 0.5 }}
                     >
-                        <span>{displayedText}</span>
-                        {/* Blinking cursor - only visible while typing */}
-                        {!typingComplete && (
-                            <span className="inline-block w-1 h-8 md:h-12 ml-1 bg-primary align-middle animate-pulse" />
-                        )}
-                    </motion.h1>
+                        Portfolio © 2026
+                    </motion.div>
                 </motion.div>
             )}
         </AnimatePresence>

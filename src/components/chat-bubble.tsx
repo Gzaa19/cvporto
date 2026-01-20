@@ -42,7 +42,6 @@ export function ChatBubble() {
 
         startTransition(async () => {
             try {
-                // Prepare context for the API (send recent history)
                 const history = messages.concat(userMsg).map(m => ({ role: m.role, content: m.content }))
 
                 const result = await getChatResponse(history)

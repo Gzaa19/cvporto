@@ -18,11 +18,6 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   title: "Portofolio | Gaza Al Ghozali Chansa",
   description: "UnderGraduate Informatics Student",
-  icons: {
-    icon: "/icons/Icon_website.png",
-    shortcut: "/icons/Icon_website.png",
-    apple: "/icons/Icon_website.png",
-  },
 };
 
 export default function RootLayout({
@@ -33,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${outfit.variable} ${spaceMono.variable} antialiased bg-background text-foreground overflow-x-hidden`}
+        className={`${outfit.variable} ${spaceMono.variable} antialiased bg-background text-foreground overflow-x-hidden relative`}
       >
         <SmoothScroll>
           {children}
