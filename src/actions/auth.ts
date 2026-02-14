@@ -70,5 +70,5 @@ export async function loginAction(prevState: any, formData: FormData) {
 
 export async function logoutAction() {
     (await cookies()).set("session", "", { expires: new Date(0) });
-    redirect("/login");
+    redirect("/admin/login");
 }

@@ -1,6 +1,3 @@
-// Premium Icons using High-Fidelity SVG Paths (Simple Icons / Official Brand Vectors)
-// Colors are applied by default but can be overridden via className (text-current) if needed.
-
 export const ReactIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
         <path d="M12 21.9951C17.5228 21.9951 22 17.5179 22 11.9951C22 6.47225 17.5228 1.99512 12 1.99512C6.47715 1.99512 2 6.47225 2 11.9951C2 17.5179 6.47715 21.9951 12 21.9951Z" fill="#20232A" />

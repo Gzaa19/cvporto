@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { useMediaQuery } from "@/hooks";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { BackgroundGrid } from "@/components/ui/background-grid";
@@ -13,7 +12,8 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Use simplified Skill type for frontend
+const ITEMS_PER_PAGE = 8;
+
 interface SkillDisplay {
     id: string;
     number: string;
@@ -27,11 +27,9 @@ const SkillCard = ({
     className
 }: {
     skill: SkillDisplay;
-    className?: string; // receive opacity/transform styles from parent if needed or use class
+    className?: string;
 }) => {
-    // Resolve Icon URL
     const iconUrl = ICON_MAP[skill.iconName] || ICON_MAP["React"];
-    // Check if it's Next.js for invert filter (Next.js logo is black, invisible on dark bg)
     const isNextJs = skill.iconName === "Next.js";
 
     return (
@@ -68,17 +66,49 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     const cardsRef = useRef<HTMLDivElement>(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const initialAnimDone = useRef(false);
+    const isTransitioning = useRef(false);
 
-    // Transform incoming data to display format with "01", "02" numbers
     const displaySkills: SkillDisplay[] = skills.length > 0 ? skills.map((s, i) => ({
         id: s.id,
         number: `0${i + 1}`,
         name: s.name,
         category: s.category,
         iconName: s.iconName,
-        order: s.order // Keep order if present
+        order: s.order
     })).sort((a, b) => (a.order || 0) - (b.order || 0)) : [];
 
+    const totalPages = Math.ceil(displaySkills.length / ITEMS_PER_PAGE);
+    const pagedSkills = displaySkills.slice(
+        currentPage * ITEMS_PER_PAGE,
+        (currentPage + 1) * ITEMS_PER_PAGE
+    );
+
+    const handlePageChange = useCallback((newPage: number) => {
+        if (isTransitioning.current) return;
+        isTransitioning.current = true;
+
+        const cards = cardsRef.current?.children;
+        if (!cards) {
+            setCurrentPage(newPage);
+            isTransitioning.current = false;
+            return;
+        }
+
+        // Fade out current cards
+        gsap.to(Array.from(cards), {
+            opacity: 0,
+            y: -20,
+            duration: 0.25,
+            ease: "power2.in",
+            onComplete: () => {
+                setCurrentPage(newPage);
+            },
+        });
+    }, []);
+
+    // ScrollTrigger — only created ONCE for the initial reveal
     useGSAP(() => {
         if (!displaySkills.length) return;
 
@@ -88,21 +118,20 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
 
         if (!container || !cards) return;
 
-        // Create a timeline that pins the container
-        // We use a large 'end' value to create scroll distance for the animations
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: container,
                 start: "top top",
-                end: "+=2000", // Adjust this value to control speed/duration
+                end: "+=2000",
                 pin: true,
                 scrub: 1,
                 anticipatePin: 1,
                 invalidateOnRefresh: true,
+                onLeave: () => { initialAnimDone.current = true; },
+                onEnterBack: () => { initialAnimDone.current = true; },
             }
         });
 
-        // 1. Animate Header In
         if (header) {
             tl.fromTo(header,
                 { opacity: 0, y: 20 },
@@ -110,28 +139,57 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
             );
         }
 
-        // 2. Animate Cards Staggered
-        // We want them to appear one by one as we scroll
-        // Converting the array of HTMLCollection to array for easy usage
         const cardElements = Array.from(cards);
 
         cardElements.forEach((card, index) => {
-            // For each card, we fade it in and move it up
-            // We stagger them by placing them at different times in the timeline
             tl.fromTo(card,
                 { opacity: 0, y: 50, scale: 0.9 },
                 { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out" },
-                // Stagger offset: start after header, then 0.5s apart (relative to scroll timeline)
                 0.5 + (index * 0.5)
             );
         });
 
-        // Add a small buffer at the end of timeline so user sees all cards before unpinning
         tl.to({}, { duration: 1 });
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, { scope: containerRef, dependencies: [displaySkills.length] });
 
-    // Conditional height: If no skills, just normal height. if Skills, full screen (pinned)
+    // Animate cards in after page change (runs when currentPage updates and React re-renders new cards)
+    useEffect(() => {
+        if (currentPage === 0 && !initialAnimDone.current) {
+            // First page initial load is handled by ScrollTrigger
+            isTransitioning.current = false;
+            return;
+        }
+
+        // Wait a tick for React to render the new cards
+        const timer = requestAnimationFrame(() => {
+            const cards = cardsRef.current?.children;
+            if (!cards) {
+                isTransitioning.current = false;
+                return;
+            }
+
+            const cardElements = Array.from(cards);
+
+            gsap.set(cardElements, { opacity: 0, y: 30, scale: 0.95 });
+
+            gsap.to(cardElements, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.45,
+                ease: "power2.out",
+                stagger: 0.06,
+                onComplete: () => {
+                    isTransitioning.current = false;
+                },
+            });
+        });
+
+        return () => cancelAnimationFrame(timer);
+    }, [currentPage]);
+
     const sectionHeight = displaySkills.length > 0 ? "h-screen" : "min-h-[60vh] border-b border-white/5";
 
     return (
@@ -140,7 +198,6 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
             className={`relative ${sectionHeight} bg-background z-10 overflow-hidden`}
         >
             <div className="w-full h-full flex items-center justify-center">
-                {/* Background Grid Pattern */}
                 <BackgroundGrid />
 
                 {displaySkills.length > 0 && (
@@ -148,15 +205,12 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
                         <WatermarkText text="TOOLS" />
                     </div>
                 )}
-
                 <div className="container px-4 md:px-12 relative z-10 mx-auto max-w-7xl h-full flex flex-col justify-center items-center">
                     {displaySkills.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start w-full pt-20">
-
-                            {/* Header Section */}
                             <div
                                 ref={headerRef}
-                                className="col-span-1 md:col-span-3 lg:col-span-3 mb-8 md:mb-0 text-center md:text-left opacity-0" // start opacity 0 for GSAP
+                                className="col-span-1 md:col-span-3 lg:col-span-3 mb-8 md:mb-0 text-center md:text-left opacity-0"
                             >
                                 <SectionHeading number="03" title="SKILLS" className="mb-6 justify-center md:justify-start" />
                                 <h2 className="headline-secondary mb-4">
@@ -165,16 +219,54 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
                                 <p className="description-text">
                                     A curated collection of modern technologies I use to build robust, scalable, and beautiful digital experiences.
                                 </p>
-                            </div>
 
-                            {/* Skills Grid */}
+                                {/* Pagination Controls */}
+                                {totalPages > 1 && (
+                                    <div className="mt-6 flex flex-col items-center md:items-start gap-3">
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => handlePageChange(currentPage - 1)}
+                                                disabled={currentPage === 0}
+                                                className="w-8 h-8 flex items-center justify-center rounded-sm border border-white/10 text-neutral-400 hover:text-primary hover:border-primary/50 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 font-mono text-xs"
+                                                aria-label="Previous page"
+                                            >
+                                                ‹
+                                            </button>
+
+                                            {Array.from({ length: totalPages }).map((_, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => handlePageChange(i)}
+                                                    className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentPage
+                                                        ? 'bg-primary scale-125 shadow-[0_0_8px_rgba(0,255,255,0.4)]'
+                                                        : 'bg-white/20 hover:bg-white/40'
+                                                        }`}
+                                                    aria-label={`Go to page ${i + 1}`}
+                                                />
+                                            ))}
+
+                                            <button
+                                                onClick={() => handlePageChange(currentPage + 1)}
+                                                disabled={currentPage === totalPages - 1}
+                                                className="w-8 h-8 flex items-center justify-center rounded-sm border border-white/10 text-neutral-400 hover:text-primary hover:border-primary/50 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 font-mono text-xs"
+                                                aria-label="Next page"
+                                            >
+                                                ›
+                                            </button>
+                                        </div>
+
+                                        <span className="text-[10px] font-mono text-neutral-500 tracking-wider">
+                                            {String(currentPage + 1).padStart(2, '0')} / {String(totalPages).padStart(2, '0')}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                             <div className="col-span-1 md:col-span-9 lg:col-span-9 w-full">
                                 <div
                                     ref={cardsRef}
                                     className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-4 md:gap-y-6"
                                 >
-                                    {displaySkills.map((skill) => (
-                                        // opacity-0 by default, handled by GSAP
+                                    {pagedSkills.map((skill) => (
                                         <div key={skill.id} className="opacity-0">
                                             <SkillCard skill={skill} />
                                         </div>
