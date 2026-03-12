@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { serverCache } from "@/lib/cache";
 
 // Get hero status (or create default if not exists)
 export async function getHeroStatus() {
@@ -41,6 +42,7 @@ export async function updateHeroStatus(data: {
             },
         });
 
+        serverCache.invalidateByTags(["hero-status"]);
         revalidatePath("/");
         revalidatePath("/admin");
         return updated;
@@ -56,6 +58,7 @@ export async function updateHeroStatus(data: {
         },
     });
 
+    serverCache.invalidateByTags(["hero-status"]);
     revalidatePath("/");
     revalidatePath("/admin");
     return created;

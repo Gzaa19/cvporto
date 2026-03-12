@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import HeroSvg from "@/assets/Hero.svg";
+import HeroBg from "@/assets/hero-bg.webp";
 import Snowfall from "react-snowfall";
 import StaggeredText from "@/components/ui/StaggeredText";
 import ScrollHideContent from "@/components/ui/ScrollHideContent";
@@ -53,11 +53,13 @@ export default function Hero({ heroStatus }: HeroProps) {
                 className="absolute inset-0 w-full h-full pointer-events-none z-0"
             >
                 <Image
-                    src={HeroSvg}
+                    src={HeroBg}
                     alt="Hero decoration"
                     fill
                     className="object-cover"
                     priority
+                    placeholder="blur"
+                    quality={75}
                 />
             </motion.div>
 

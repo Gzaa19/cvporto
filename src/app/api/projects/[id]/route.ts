@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
+import { serverCache } from "@/lib/cache"
 
 interface RouteParams {
     params: Promise<{ id: string }>
@@ -8,15 +9,23 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const { id } = await params
-        const project = await prisma.project.findUnique({
-            where: { id },
-        })
+
+        const project = await serverCache.getOrFetch(
+            `api:project:${id}`,
+            () => prisma.project.findUnique({ where: { id } }),
+            120,
+            ["projects"]
+        )
 
         if (!project) {
             return NextResponse.json({ error: "Project not found" }, { status: 404 })
         }
 
-        return NextResponse.json(project)
+        return NextResponse.json(project, {
+            headers: {
+                "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+            },
+        })
     } catch (error) {
         console.error("Error fetching project:", error)
         return NextResponse.json({ error: "Failed to fetch project" }, { status: 500 })
@@ -29,26 +38,27 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         const body = await request.json()
         const { title, description, tags, imageUrl, projectUrl, githubUrl, order } = body
 
-        const existing = await prisma.project.findUnique({ where: { id } })
-        if (!existing) {
-            return NextResponse.json({ error: "Project not found" }, { status: 404 })
-        }
-
+        // Update directly — Prisma will throw if record not found
         const project = await prisma.project.update({
             where: { id },
             data: {
-                title: title ?? existing.title,
-                description: description ?? existing.description,
-                tags: tags ?? existing.tags,
-                imageUrl: imageUrl !== undefined ? imageUrl : existing.imageUrl,
-                projectUrl: projectUrl !== undefined ? projectUrl : existing.projectUrl,
-                githubUrl: githubUrl !== undefined ? githubUrl : existing.githubUrl,
-                order: order ?? existing.order,
+                ...(title !== undefined && { title }),
+                ...(description !== undefined && { description }),
+                ...(tags !== undefined && { tags }),
+                ...(imageUrl !== undefined && { imageUrl }),
+                ...(projectUrl !== undefined && { projectUrl }),
+                ...(githubUrl !== undefined && { githubUrl }),
+                ...(order !== undefined && { order }),
             },
         })
 
+        serverCache.invalidateByTags(["projects"])
         return NextResponse.json(project)
-    } catch (error) {
+    } catch (error: unknown) {
+        // Handle record not found
+        if (error && typeof error === "object" && "code" in error && (error as { code: string }).code === "P2025") {
+            return NextResponse.json({ error: "Project not found" }, { status: 404 })
+        }
         console.error("Error updating project:", error)
         return NextResponse.json({ error: "Failed to update project" }, { status: 500 })
     }
@@ -57,16 +67,14 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const { id } = await params
-        const existing = await prisma.project.findUnique({ where: { id } })
-
-        if (!existing) {
-            return NextResponse.json({ error: "Project not found" }, { status: 404 })
-        }
-
         await prisma.project.delete({ where: { id } })
 
+        serverCache.invalidateByTags(["projects"])
         return NextResponse.json({ message: "Project deleted successfully" })
-    } catch (error) {
+    } catch (error: unknown) {
+        if (error && typeof error === "object" && "code" in error && (error as { code: string }).code === "P2025") {
+            return NextResponse.json({ error: "Project not found" }, { status: 404 })
+        }
         console.error("Error deleting project:", error)
         return NextResponse.json({ error: "Failed to delete project" }, { status: 500 })
     }

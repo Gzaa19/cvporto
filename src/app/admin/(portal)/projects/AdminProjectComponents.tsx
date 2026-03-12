@@ -1,8 +1,10 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { createProject, updateProject, deleteProject } from "@/actions/projects";
 import { ICON_MAP } from "@/lib/icons-map";
+import { Upload, X, ImageIcon, Loader2 } from "lucide-react";
+import { compressImage } from "@/lib/compress-image";
 
 interface Project {
     id: string;
@@ -23,12 +25,9 @@ export default function AdminProjectForm({
     initialData?: Project[],
     projectToEdit?: Project | null
 }) {
-    // Mode Add or Edit determined by projectToEdit
     const isEditMode = !!projectToEdit;
 
-    // Form State
     const [formData, setFormData] = useState({
-
         title: projectToEdit?.title || "",
         subtitle: projectToEdit?.subtitle || "",
         description: projectToEdit?.description || "",
@@ -41,6 +40,99 @@ export default function AdminProjectForm({
 
     const [isSaving, setIsSaving] = useState(false);
 
+    // Image upload states
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const [isDragOver, setIsDragOver] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Handle file upload to Cloudinary via /api/upload
+    const handleFileUpload = async (file: File) => {
+        setUploadError(null);
+
+        const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+        if (!allowedTypes.includes(file.type)) {
+            setUploadError("Format tidak didukung. Gunakan JPEG, PNG, WebP, GIF, atau SVG.");
+            return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            setUploadError("File terlalu besar. Maksimal 10MB.");
+            return;
+        }
+
+        setIsUploading(true);
+
+        try {
+            // Compress image client-side before upload
+            const originalSize = file.size;
+            const compressed = await compressImage(file, {
+                maxWidth: 1920,
+                maxHeight: 1080,
+                quality: 0.8,
+            });
+            const savedPercent = Math.round((1 - compressed.size / originalSize) * 100);
+            if (savedPercent > 0) {
+                console.log(
+                    `Image compressed: ${(originalSize / 1024).toFixed(0)}KB → ${(compressed.size / 1024).toFixed(0)}KB (-${savedPercent}%)`
+                );
+            }
+
+            const uploadForm = new FormData();
+            uploadForm.append("file", compressed);
+
+            const response = await fetch("/api/upload", {
+                method: "POST",
+                body: uploadForm,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Upload gagal");
+            }
+
+            const result = await response.json();
+            setFormData((prev) => ({ ...prev, imageUrl: result.url }));
+        } catch (error) {
+            console.error("Upload error:", error);
+            setUploadError(error instanceof Error ? error.message : "Gagal mengupload gambar");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) handleFileUpload(file);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
+
+    const handleDragOver = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(true);
+    }, []);
+
+    const handleDragLeave = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(false);
+    }, []);
+
+    const handleDrop = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(false);
+        const file = e.dataTransfer.files?.[0];
+        if (file) handleFileUpload(file);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleRemoveImage = () => {
+        setFormData((prev) => ({ ...prev, imageUrl: "" }));
+        setUploadError(null);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
@@ -50,8 +142,7 @@ export default function AdminProjectForm({
             } else {
                 await createProject(formData);
             }
-            // Reset or redirect logic could be here, for now simpler is page refresh or parent handler
-            window.location.href = "/admin/projects"; // Simple redirect to clear state/refresh list
+            window.location.href = "/admin/projects";
         } catch (error) {
             console.error("Failed to save project", error);
         } finally {
@@ -162,6 +253,91 @@ export default function AdminProjectForm({
                     />
                 </div>
 
+                {/* Image Upload */}
+                <div className="md:col-span-2">
+                    <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
+                        Project Image
+                    </label>
+
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+                        onChange={handleFileChange}
+                        className="hidden"
+                    />
+
+                    {formData.imageUrl ? (
+                        <div className="relative group/preview rounded-lg overflow-hidden border border-white/10 bg-black/50">
+                            <img
+                                src={formData.imageUrl}
+                                alt="Project preview"
+                                className="w-full max-h-[300px] object-contain"
+                            />
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/preview:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase tracking-wider rounded-lg border border-white/20 transition-colors flex items-center gap-2"
+                                >
+                                    <Upload size={14} /> Ganti
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-mono text-xs uppercase tracking-wider rounded-lg border border-red-500/30 transition-colors flex items-center gap-2"
+                                >
+                                    <X size={14} /> Hapus
+                                </button>
+                            </div>
+                            <div className="absolute bottom-2 left-2 right-2">
+                                <div className="px-3 py-1.5 bg-black/70 backdrop-blur-sm rounded text-[10px] font-mono text-white/50 truncate">
+                                    {formData.imageUrl}
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                            onClick={() => !isUploading && fileInputRef.current?.click()}
+                            className={`relative flex flex-col items-center justify-center py-12 px-6 rounded-lg border-2 border-dashed cursor-pointer transition-all duration-300 ${isDragOver
+                                    ? "border-primary bg-primary/10 scale-[1.02]"
+                                    : "border-white/20 bg-background hover:border-white/40 hover:bg-white/5"
+                                } ${isUploading ? "pointer-events-none" : ""}`}
+                        >
+                            {isUploading ? (
+                                <>
+                                    <Loader2 size={40} className="text-primary animate-spin mb-3" />
+                                    <p className="text-sm font-mono text-white/70">Mengupload...</p>
+                                </>
+                            ) : (
+                                <>
+                                    <div className={`p-4 rounded-full mb-4 transition-colors ${isDragOver ? "bg-primary/20" : "bg-white/5"
+                                        }`}>
+                                        <ImageIcon size={32} className={`transition-colors ${isDragOver ? "text-primary" : "text-white/30"
+                                            }`} />
+                                    </div>
+                                    <p className="text-sm font-mono text-white/70 mb-1">
+                                        <span className="text-primary font-bold">Klik untuk upload</span> atau drag & drop
+                                    </p>
+                                    <p className="text-xs font-mono text-white/30">
+                                        JPEG, PNG, WebP, GIF, SVG • Maks 10MB
+                                    </p>
+                                </>
+                            )}
+                        </div>
+                    )}
+
+                    {uploadError && (
+                        <div className="mt-3 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs font-mono flex items-center gap-2">
+                            <X size={14} className="shrink-0" />
+                            {uploadError}
+                        </div>
+                    )}
+                </div>
+
                 {/* Links */}
                 <div>
                     <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
@@ -185,20 +361,6 @@ export default function AdminProjectForm({
                         className="w-full px-4 py-3 bg-background border border-white/20 rounded-lg text-white font-mono focus:border-primary focus:outline-none transition-colors"
                     />
                 </div>
-
-                {/* Image URL (Simple input for now, could be File Upload later) */}
-                <div className="md:col-span-2">
-                    <label className="block text-sm font-mono text-muted-foreground mb-2 uppercase tracking-wider">
-                        Image URL
-                    </label>
-                    <input
-                        type="text"
-                        value={formData.imageUrl || ""}
-                        onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                        className="w-full px-4 py-3 bg-background border border-white/20 rounded-lg text-white font-mono focus:border-primary focus:outline-none transition-colors"
-                        placeholder="/projects/example.png or https://..."
-                    />
-                </div>
             </div>
 
             <div className="flex justify-end gap-3 pt-4">
@@ -209,7 +371,7 @@ export default function AdminProjectForm({
                 )}
                 <button
                     type="submit"
-                    disabled={isSaving}
+                    disabled={isSaving || isUploading}
                     className="px-6 py-3 bg-primary text-primary-foreground font-mono font-bold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
                 >
                     {isSaving ? "Saving..." : (isEditMode ? "Update Project" : "Create Project")}
@@ -220,7 +382,6 @@ export default function AdminProjectForm({
 }
 
 import { Edit, Trash2, ExternalLink, Github, GripVertical, Eye } from "lucide-react";
-import Image from "next/image";
 import ProjectDetailModal from "@/components/ui/ProjectDetailModal";
 
 // ... (keep previous imports)
@@ -276,8 +437,6 @@ export function ProjectList({ projects }: { projects: Project[] }) {
                                 <p className="text-sm font-mono text-primary/80 uppercase tracking-wider mb-2">
                                     {p.subtitle}
                                 </p>
-                                {/* Description removed based on request, moved to modal */}
-                                {/* Description removed based on request, moved to modal */}
                             </div>
 
                             {/* Tags */}

@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from "@/lib/prisma"
+import { serverCache } from "@/lib/cache"
 
 const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY
 
@@ -10,6 +11,9 @@ export interface ChatMessage {
 }
 
 async function buildRAGContext() {
+    return serverCache.getOrFetch(
+        "action:chat:rag-context",
+        async () => {
     const [about, skills, projects, hero] = await Promise.all([
         prisma.aboutContent.findFirst(),
         prisma.skill.findMany({ orderBy: { order: 'asc' } }),
@@ -86,6 +90,10 @@ ${projectsFormatted || "No projects listed yet."}
 5. Do NOT make up facts or information not provided above.
 6. Keep responses concise but helpful.
 `.trim()
+        },
+        120,
+        ["about-content", "skills", "projects", "hero-status"]
+    )
 }
 
 export async function getChatResponse(messages: ChatMessage[]) {

@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { serverCache } from "@/lib/cache";
 
 // Get About Content (or create default)
 export async function getAboutContent() {
@@ -41,6 +42,7 @@ export async function updateAboutContent(data: {
             },
         });
 
+        serverCache.invalidateByTags(["about-content"]);
         revalidatePath("/");
         revalidatePath("/admin/about");
         return updated;
@@ -56,6 +58,7 @@ export async function updateAboutContent(data: {
         },
     });
 
+    serverCache.invalidateByTags(["about-content"]);
     revalidatePath("/");
     revalidatePath("/admin/about");
     return created;

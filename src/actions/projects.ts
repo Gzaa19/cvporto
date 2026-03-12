@@ -2,15 +2,27 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { serverCache } from "@/lib/cache";
 
-// Get All Projects
+// Get All Projects (cached via data layer, this is for admin)
 export async function getProjects() {
     return await prisma.project.findMany({
         orderBy: { order: "asc" },
+        select: {
+            id: true,
+            title: true,
+            subtitle: true,
+            description: true,
+            tags: true,
+            imageUrl: true,
+            projectUrl: true,
+            githubUrl: true,
+            order: true,
+        },
     });
 }
 
-// Get Single Project
+// Get Single Project by ID
 export async function getProject(id: string) {
     return await prisma.project.findUnique({
         where: { id },
@@ -41,6 +53,8 @@ export async function createProject(data: {
         },
     });
 
+    // Invalidate cache
+    serverCache.invalidateByTags(["projects"]);
     revalidatePath("/");
     revalidatePath("/admin/projects");
     return project;
@@ -71,6 +85,8 @@ export async function updateProject(id: string, data: {
         },
     });
 
+    // Invalidate cache
+    serverCache.invalidateByTags(["projects"]);
     revalidatePath("/");
     revalidatePath("/admin/projects");
     return project;
@@ -82,6 +98,8 @@ export async function deleteProject(id: string) {
         where: { id },
     });
 
+    // Invalidate cache
+    serverCache.invalidateByTags(["projects"]);
     revalidatePath("/");
     revalidatePath("/admin/projects");
 }

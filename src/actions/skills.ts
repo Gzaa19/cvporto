@@ -2,11 +2,19 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { serverCache } from "@/lib/cache";
 
 // Get All Skills
 export async function getSkills() {
     return await prisma.skill.findMany({
         orderBy: { order: "asc" },
+        select: {
+            id: true,
+            name: true,
+            category: true,
+            iconName: true,
+            order: true,
+        },
     });
 }
 
@@ -33,6 +41,7 @@ export async function createSkill(data: {
         },
     });
 
+    serverCache.invalidateByTags(["skills"]);
     revalidatePath("/");
     revalidatePath("/admin/skills");
     return skill;
@@ -55,6 +64,7 @@ export async function updateSkill(id: string, data: {
         },
     });
 
+    serverCache.invalidateByTags(["skills"]);
     revalidatePath("/");
     revalidatePath("/admin/skills");
     return skill;
@@ -66,6 +76,7 @@ export async function deleteSkill(id: string) {
         where: { id },
     });
 
+    serverCache.invalidateByTags(["skills"]);
     revalidatePath("/");
     revalidatePath("/admin/skills");
 }

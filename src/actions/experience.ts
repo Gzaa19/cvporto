@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { serverCache } from "@/lib/cache";
 
 export interface ExperienceData {
     role: string;
@@ -27,6 +28,7 @@ export async function createExperience(data: ExperienceData) {
                 order: data.order,
             },
         });
+        serverCache.invalidateByTags(["experiences"]);
         revalidatePath("/admin/experience");
         revalidatePath("/");
         return { success: true, data: experience };
@@ -39,10 +41,19 @@ export async function createExperience(data: ExperienceData) {
 // Get all experiences
 export async function getExperiences() {
     try {
-        const experiences = await prisma.experience.findMany({
+        return await prisma.experience.findMany({
             orderBy: { order: "asc" },
+            select: {
+                id: true,
+                role: true,
+                company: true,
+                location: true,
+                workType: true,
+                period: true,
+                description: true,
+                order: true,
+            },
         });
-        return experiences;
     } catch (error) {
         console.error("Error fetching experiences:", error);
         return [];
@@ -52,10 +63,9 @@ export async function getExperiences() {
 // Get single experience by ID
 export async function getExperienceById(id: string) {
     try {
-        const experience = await prisma.experience.findUnique({
+        return await prisma.experience.findUnique({
             where: { id },
         });
-        return experience;
     } catch (error) {
         console.error("Error fetching experience:", error);
         return null;
@@ -77,6 +87,7 @@ export async function updateExperience(id: string, data: ExperienceData) {
                 order: data.order,
             },
         });
+        serverCache.invalidateByTags(["experiences"]);
         revalidatePath("/admin/experience");
         revalidatePath("/");
         return { success: true, data: experience };
@@ -92,6 +103,7 @@ export async function deleteExperience(id: string) {
         await prisma.experience.delete({
             where: { id },
         });
+        serverCache.invalidateByTags(["experiences"]);
         revalidatePath("/admin/experience");
         revalidatePath("/");
         return { success: true };

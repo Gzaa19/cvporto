@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Mail, Github, Linkedin, ArrowUpRight } from "lucide-react";
 import Snowfall from "react-snowfall";
-import footerBg from "@/assets/footer-bg.jpg";
+import footerBg from "@/assets/footer-bg.webp";
 
 const contactLinks = [
     {
@@ -32,8 +32,9 @@ export default function Footer() {
                 alt="Footer background"
                 fill
                 className="object-cover object-center"
-                quality={90}
-                priority={false}
+                quality={70}
+                placeholder="blur"
+                loading="lazy"
             />
 
             {/* Snowfall Effect */}
