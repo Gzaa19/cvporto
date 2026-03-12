@@ -72,7 +72,7 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
 
     const displaySkills: SkillDisplay[] = skills.length > 0 ? skills.map((s, i) => ({
         id: s.id,
-        number: `0${i + 1}`,
+        number: String(i + 1).padStart(2, '0'),
         name: s.name,
         category: s.category,
         iconName: s.iconName,
@@ -122,9 +122,9 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
             scrollTrigger: {
                 trigger: container,
                 start: "top top",
-                end: "+=2000",
+                end: "+=1000",
                 pin: true,
-                scrub: 1,
+                scrub: 0.5,
                 anticipatePin: 1,
                 invalidateOnRefresh: true,
                 onLeave: () => { initialAnimDone.current = true; },
@@ -135,21 +135,27 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
         if (header) {
             tl.fromTo(header,
                 { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+                { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
             );
         }
 
         const cardElements = Array.from(cards);
 
-        cardElements.forEach((card, index) => {
-            tl.fromTo(card,
-                { opacity: 0, y: 50, scale: 0.9 },
-                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out" },
-                0.5 + (index * 0.5)
-            );
-        });
+        // Animate all cards together with small stagger — fast grouped reveal
+        tl.fromTo(cardElements,
+            { opacity: 0, y: 40, scale: 0.95 },
+            {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.6,
+                ease: "power2.out",
+                stagger: 0.08,
+            },
+            0.3
+        );
 
-        tl.to({}, { duration: 1 });
+        tl.to({}, { duration: 0.3 });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, { scope: containerRef, dependencies: [displaySkills.length] });
