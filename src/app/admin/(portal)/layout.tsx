@@ -14,24 +14,21 @@ export default async function PortalLayout({
     }
 
     return (
-        // WRAPPER UTAMA: Let window scroll naturally (Lenis) - Inherited from RootLayout
-        <div className="flex min-h-screen w-full bg-background text-white">
-
-            {/* 2. SIDEBAR: Wrapper for sticky sidebar */}
-            <div className="w-64 shrink-0 hidden md:block relative">
+        // h-screen + overflow-hidden on wrapper = body never scrolls
+        // sidebar stays fixed, only content area scrolls independently
+        <div className="flex h-screen w-full overflow-hidden bg-background text-white">
+            {/* SIDEBAR: fixed height, scrolls only its own content */}
+            <div className="w-64 shrink-0 hidden md:flex flex-col h-full">
                 <AdminSidebar />
             </div>
 
-            {/* 3. AREA KONTEN */}
-            <div className="flex-1 flex flex-col min-w-0">
-
-                {/* 4. MAIN CONTENT */}
-                <main className="flex-1 p-4 md:p-8 relative">
-                    <div className="pb-32">
+            {/* CONTENT AREA: independent native scroll container */}
+            <div className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
+                <main className="flex-1 p-4 md:p-8">
+                    <div className="pb-16">
                         {children}
                     </div>
                 </main>
-
             </div>
         </div>
     );

@@ -6,20 +6,25 @@ import { serverCache } from "@/lib/cache";
 
 // Get About Content (or create default)
 export async function getAboutContent() {
-    let content = await prisma.aboutContent.findFirst();
-
-    if (!content) {
-        content = await prisma.aboutContent.create({
-            data: {
-                greeting: "Hi, I'm",
-                name: "Gaza Chansa",
-                introText: "A Software Engineer who loves building modern web applications with cutting-edge technologies.",
-                focusText: "Currently focusing on creating interactions that feel natural and performance that feels instantaneous.",
-            },
-        });
-    }
-
-    return content;
+    return await serverCache.getOrFetch(
+        "admin:about-content",
+        async () => {
+            let content = await prisma.aboutContent.findFirst();
+            if (!content) {
+                content = await prisma.aboutContent.create({
+                    data: {
+                        greeting: "Hi, I'm",
+                        name: "Gaza Chansa",
+                        introText: "A Software Engineer who loves building modern web applications with cutting-edge technologies.",
+                        focusText: "Currently focusing on creating interactions that feel natural and performance that feels instantaneous.",
+                    },
+                });
+            }
+            return content;
+        },
+        30,
+        ["about-content"]
+    );
 }
 
 // Update About Content

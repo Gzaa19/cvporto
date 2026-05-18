@@ -1,7 +1,7 @@
 import { getHeroStatus } from "@/actions/hero-status";
 import AdminHeroStatusForm from "./AdminHeroStatusForm";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AdminHeroPage() {
     const heroStatus = await getHeroStatus();

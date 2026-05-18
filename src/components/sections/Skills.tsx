@@ -196,7 +196,7 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
         return () => cancelAnimationFrame(timer);
     }, [currentPage]);
 
-    const sectionHeight = displaySkills.length > 0 ? "h-screen" : "min-h-[60vh] border-b border-white/5";
+    const sectionHeight = displaySkills.length > 0 ? "min-h-screen" : "min-h-[50vh] border-b border-white/5";
 
     return (
         <section
@@ -211,29 +211,29 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
                         <WatermarkText text="TOOLS" />
                     </div>
                 )}
-                <div className="container px-4 md:px-12 relative z-10 mx-auto max-w-7xl h-full flex flex-col justify-center items-center">
+                <div className="px-6 md:px-20 relative z-10 mx-auto w-full h-full flex flex-col justify-center items-center">
                     {displaySkills.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start w-full pt-20">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-start w-full py-12">
                             <div
                                 ref={headerRef}
-                                className="col-span-1 md:col-span-3 lg:col-span-3 mb-8 md:mb-0 text-center md:text-left opacity-0"
+                                className="col-span-1 md:col-span-3 lg:col-span-3 mb-6 md:mb-0 text-center md:text-left opacity-0"
                             >
-                                <SectionHeading number="03" title="SKILLS" className="mb-6 justify-center md:justify-start" />
-                                <h2 className="headline-secondary mb-4">
+                                <SectionHeading number="03" title="SKILLS" className="mb-4 justify-center md:justify-start" />
+                                <h2 className="headline-secondary mb-3 text-2xl md:text-3xl">
                                     TECH<br />STACK
                                 </h2>
-                                <p className="description-text">
+                                <p className="description-text text-xs md:text-sm">
                                     A curated collection of modern technologies I use to build robust, scalable, and beautiful digital experiences.
                                 </p>
 
                                 {/* Pagination Controls */}
                                 {totalPages > 1 && (
-                                    <div className="mt-6 flex flex-col items-center md:items-start gap-3">
+                                    <div className="mt-4 flex flex-col items-center md:items-start gap-2">
                                         <div className="flex items-center gap-2">
                                             <button
                                                 onClick={() => handlePageChange(currentPage - 1)}
                                                 disabled={currentPage === 0}
-                                                className="w-8 h-8 flex items-center justify-center rounded-sm border border-white/10 text-neutral-400 hover:text-primary hover:border-primary/50 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 font-mono text-xs"
+                                                className="w-7 h-7 flex items-center justify-center rounded-sm border border-white/10 text-neutral-400 hover:text-primary hover:border-primary/50 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 font-mono text-xs"
                                                 aria-label="Previous page"
                                             >
                                                 ‹
@@ -254,14 +254,14 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
                                             <button
                                                 onClick={() => handlePageChange(currentPage + 1)}
                                                 disabled={currentPage === totalPages - 1}
-                                                className="w-8 h-8 flex items-center justify-center rounded-sm border border-white/10 text-neutral-400 hover:text-primary hover:border-primary/50 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 font-mono text-xs"
+                                                className="w-7 h-7 flex items-center justify-center rounded-sm border border-white/10 text-neutral-400 hover:text-primary hover:border-primary/50 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-300 font-mono text-xs"
                                                 aria-label="Next page"
                                             >
                                                 ›
                                             </button>
                                         </div>
 
-                                        <span className="text-[10px] font-mono text-neutral-500 tracking-wider">
+                                        <span className="text-[9px] font-mono text-neutral-500 tracking-wider">
                                             {String(currentPage + 1).padStart(2, '0')} / {String(totalPages).padStart(2, '0')}
                                         </span>
                                     </div>
@@ -270,7 +270,7 @@ export default function Skills({ skills = [] }: { skills?: any[] }) {
                             <div className="col-span-1 md:col-span-9 lg:col-span-9 w-full">
                                 <div
                                     ref={cardsRef}
-                                    className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-4 md:gap-y-6"
+                                    className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-3 md:gap-y-4"
                                 >
                                     {pagedSkills.map((skill) => (
                                         <div key={skill.id} className="opacity-0">

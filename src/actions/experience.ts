@@ -41,19 +41,24 @@ export async function createExperience(data: ExperienceData) {
 // Get all experiences
 export async function getExperiences() {
     try {
-        return await prisma.experience.findMany({
-            orderBy: { order: "asc" },
-            select: {
-                id: true,
-                role: true,
-                company: true,
-                location: true,
-                workType: true,
-                period: true,
-                description: true,
-                order: true,
-            },
-        });
+        return await serverCache.getOrFetch(
+            "admin:experiences",
+            () => prisma.experience.findMany({
+                orderBy: { order: "asc" },
+                select: {
+                    id: true,
+                    role: true,
+                    company: true,
+                    location: true,
+                    workType: true,
+                    period: true,
+                    description: true,
+                    order: true,
+                },
+            }),
+            30,
+            ["experiences"]
+        );
     } catch (error) {
         console.error("Error fetching experiences:", error);
         return [];

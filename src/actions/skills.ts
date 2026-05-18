@@ -6,16 +6,21 @@ import { serverCache } from "@/lib/cache";
 
 // Get All Skills
 export async function getSkills() {
-    return await prisma.skill.findMany({
-        orderBy: { order: "asc" },
-        select: {
-            id: true,
-            name: true,
-            category: true,
-            iconName: true,
-            order: true,
-        },
-    });
+    return await serverCache.getOrFetch(
+        "admin:skills",
+        () => prisma.skill.findMany({
+            orderBy: { order: "asc" },
+            select: {
+                id: true,
+                name: true,
+                category: true,
+                iconName: true,
+                order: true,
+            },
+        }),
+        30,
+        ["skills"]
+    );
 }
 
 // Get Single Skill

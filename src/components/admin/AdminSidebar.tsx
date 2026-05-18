@@ -18,16 +18,19 @@ export default function AdminSidebar() {
 
     return (
         <aside
-            className="h-dvh w-full border-r border-white/10 bg-[#0a0a0a] flex flex-col sticky top-0 overflow-y-auto"
+            className="h-full w-full border-r border-white/10 bg-[#0a0a0a] flex flex-col"
             data-lenis-prevent
+            onWheel={(e) => e.stopPropagation()}
         >
-            <div className="flex h-16 items-center border-b border-white/10 px-6">
+            {/* Header */}
+            <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-6">
                 <h1 className="text-xl font-bold font-mono tracking-tighter text-white">
                     Gaza/Admin
                 </h1>
             </div>
 
-            <nav className="flex flex-col gap-1 p-4">
+            {/* Nav links — scrollable if overflow */}
+            <nav className="flex flex-col gap-1 p-4 flex-1 overflow-y-auto">
                 {links.map((link) => {
                     const isActive = pathname === link.href;
                     return (
@@ -45,7 +48,8 @@ export default function AdminSidebar() {
                 })}
             </nav>
 
-            <div className="absolute bottom-4 left-0 w-full px-4">
+            {/* Log Out — always pinned at bottom */}
+            <div className="shrink-0 p-4 border-t border-white/10">
                 <form action={logoutAction}>
                     <button
                         type="submit"

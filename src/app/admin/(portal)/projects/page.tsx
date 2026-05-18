@@ -3,7 +3,7 @@ import { ProjectList } from "./AdminProjectComponents";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AdminProjectsPage() {
     const projects = await getProjects();

@@ -23,7 +23,7 @@ export default function Hero({ heroStatus }: HeroProps) {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     return (
-        <section className="h-screen relative overflow-hidden bg-background flex flex-col justify-end">
+        <section className="min-h-screen relative overflow-hidden bg-background flex flex-col justify-end">
             {/* Background decorative elements */}
             <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-900 to-transparent opacity-20 pointer-events-none" />
 
@@ -64,10 +64,10 @@ export default function Hero({ heroStatus }: HeroProps) {
             </motion.div>
 
             {/* Content Container - Centered on Mobile, Left on Desktop */}
-            <div className="z-10 px-4 md:px-8 lg:pr-12 h-full flex flex-col justify-center items-center md:items-start md:justify-end pb-16 md:pb-48">
+            <div className="z-10 px-6 md:px-20 h-full flex flex-col justify-center items-center md:items-start md:justify-end pb-8 md:pb-24">
 
                 {/* Main Text Area - Centered on Mobile, Left on Desktop */}
-                <div className="mb-8 md:mb-16 w-full flex flex-col items-center md:items-start text-center md:text-left">
+                <div className="mb-4 md:mb-8 w-full flex flex-col items-center md:items-start text-center md:text-left">
                     {/* Name Part 1: Solid - Moves Left */}
                     <div className="overflow-hidden w-fit">
                         <StaggeredText
@@ -80,7 +80,7 @@ export default function Hero({ heroStatus }: HeroProps) {
                     </div>
 
                     {/* Name Part 2: Outlined - Moves Right */}
-                    <div className="overflow-hidden w-fit -mt-1 md:-mt-4">
+                    <div className="overflow-hidden w-fit -mt-1 md:-mt-2">
                         <StaggeredText
                             text="CHANSA"
                             className="headline-outline tracking-tighter"
@@ -91,7 +91,7 @@ export default function Hero({ heroStatus }: HeroProps) {
                     </div>
 
                     {/* Subtitle - Moves Left */}
-                    <div className="overflow-hidden w-fit mt-4 md:mt-10">
+                    <div className="overflow-hidden w-fit mt-2 md:mt-4">
                         <StaggeredText
                             text={heroStatus.subtitle}
                             className="section-label text-muted-foreground"
@@ -107,32 +107,32 @@ export default function Hero({ heroStatus }: HeroProps) {
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1, duration: 0.8 }}
-                        className="flex flex-wrap justify-center md:justify-start gap-3 md:gap-6"
+                        className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4"
                     >
                         {/* Card 1 - Location */}
-                        <div className="p-3 md:p-5 border border-white/20 bg-background/30 backdrop-blur-sm min-w-[130px] md:min-w-[160px]">
-                            <h3 className="text-[9px] md:text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-mono">Location</h3>
-                            <p className="text-base md:text-lg font-bold text-white font-mono">{heroStatus.location}</p>
+                        <div className="p-2 md:p-3 border border-white/20 bg-background/30 backdrop-blur-sm min-w-[110px] md:min-w-[140px]">
+                            <h3 className="text-[8px] md:text-[9px] uppercase tracking-widest text-muted-foreground mb-1 font-mono">Location</h3>
+                            <p className="text-sm md:text-base font-bold text-white font-mono">{heroStatus.location}</p>
                         </div>
 
                         {/* Card 2 - Current Role */}
-                        <div className="p-3 md:p-5 border border-white/20 bg-background/30 backdrop-blur-sm min-w-[130px] md:min-w-[160px]">
-                            <h3 className="text-[9px] md:text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-mono">Current Role</h3>
-                            <p className="text-base md:text-lg font-bold text-white font-mono">{heroStatus.currentRole}</p>
+                        <div className="p-2 md:p-3 border border-white/20 bg-background/30 backdrop-blur-sm min-w-[110px] md:min-w-[140px]">
+                            <h3 className="text-[8px] md:text-[9px] uppercase tracking-widest text-muted-foreground mb-1 font-mono">Current Role</h3>
+                            <p className="text-sm md:text-base font-bold text-white font-mono">{heroStatus.currentRole}</p>
                         </div>
 
                         {/* Card 3 - Status (Highlighted) */}
-                        <div className="p-3 md:p-5 bg-primary text-primary-foreground border border-primary min-w-[130px] md:min-w-[160px] relative overflow-hidden group">
+                        <div className="p-2 md:p-3 bg-primary text-primary-foreground border border-primary min-w-[110px] md:min-w-[140px] relative overflow-hidden group">
                             <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                            <h3 className="text-[9px] md:text-[10px] uppercase tracking-widest opacity-80 mb-2 font-mono relative z-10">Status</h3>
-                            <p className="text-base md:text-lg font-bold font-mono relative z-10">{heroStatus.status}</p>
+                            <h3 className="text-[8px] md:text-[9px] uppercase tracking-widest opacity-80 mb-1 font-mono relative z-10">Status</h3>
+                            <p className="text-sm md:text-base font-bold font-mono relative z-10">{heroStatus.status}</p>
                         </div>
                     </motion.div>
                 </ScrollHideContent>
             </div>
 
             {/* Glitch/Circuit board placeholder at bottom to blend */}
-            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-background to-transparent z-20 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-background to-transparent z-20 pointer-events-none" />
         </section>
     );
 }

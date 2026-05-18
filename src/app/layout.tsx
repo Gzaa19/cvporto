@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
-import { ChatBubble } from "@/components/chat-bubble";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -32,7 +31,6 @@ export default function RootLayout({
       >
         <SmoothScroll>
           {children}
-          <ChatBubble />
         </SmoothScroll>
       </body>
     </html>

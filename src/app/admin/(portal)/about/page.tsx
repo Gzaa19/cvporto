@@ -1,7 +1,7 @@
 import { getAboutContent } from "@/actions/about-content";
 import AdminAboutForm from "./AdminAboutForm";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AdminAboutPage() {
     const aboutContent = await getAboutContent();

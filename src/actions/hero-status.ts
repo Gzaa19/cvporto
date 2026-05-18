@@ -6,20 +6,25 @@ import { serverCache } from "@/lib/cache";
 
 // Get hero status (or create default if not exists)
 export async function getHeroStatus() {
-    let status = await prisma.heroStatus.findFirst();
-
-    if (!status) {
-        status = await prisma.heroStatus.create({
-            data: {
-                location: "INDONESIA",
-                currentRole: "FRONT END",
-                status: "AVAILABLE",
-                subtitle: "SOFTWARE ENGINEER",
-            },
-        });
-    }
-
-    return status;
+    return await serverCache.getOrFetch(
+        "admin:hero-status",
+        async () => {
+            let status = await prisma.heroStatus.findFirst();
+            if (!status) {
+                status = await prisma.heroStatus.create({
+                    data: {
+                        location: "INDONESIA",
+                        currentRole: "FRONT END",
+                        status: "AVAILABLE",
+                        subtitle: "SOFTWARE ENGINEER",
+                    },
+                });
+            }
+            return status;
+        },
+        30,
+        ["hero-status"]
+    );
 }
 
 // Update hero status

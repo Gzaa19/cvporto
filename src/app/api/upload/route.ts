@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 
+export const maxDuration = 60; // seconds
+
 export async function POST(request: NextRequest) {
     try {
         const formData = await request.formData();
@@ -40,10 +42,7 @@ export async function POST(request: NextRequest) {
         // Upload to Cloudinary
         const result = await cloudinary.uploader.upload(dataUri, {
             folder: "cvporto/projects",
-            resource_type: "image",
-            transformation: [
-                { quality: "auto", fetch_format: "auto" },
-            ],
+            resource_type: "auto",
         });
 
         return NextResponse.json({
@@ -53,9 +52,10 @@ export async function POST(request: NextRequest) {
             height: result.height,
         });
     } catch (error) {
-        console.error("Upload error:", error);
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("Upload error:", message);
         return NextResponse.json(
-            { error: "Failed to upload image" },
+            { error: message || "Failed to upload image" },
             { status: 500 }
         );
     }

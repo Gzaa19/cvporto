@@ -6,20 +6,25 @@ import { serverCache } from "@/lib/cache";
 
 // Get All Projects (cached via data layer, this is for admin)
 export async function getProjects() {
-    return await prisma.project.findMany({
-        orderBy: { order: "asc" },
-        select: {
-            id: true,
-            title: true,
-            subtitle: true,
-            description: true,
-            tags: true,
-            imageUrl: true,
-            projectUrl: true,
-            githubUrl: true,
-            order: true,
-        },
-    });
+    return await serverCache.getOrFetch(
+        "admin:projects",
+        () => prisma.project.findMany({
+            orderBy: { order: "asc" },
+            select: {
+                id: true,
+                title: true,
+                subtitle: true,
+                description: true,
+                tags: true,
+                imageUrl: true,
+                projectUrl: true,
+                githubUrl: true,
+                order: true,
+            },
+        }),
+        30,
+        ["projects"]
+    );
 }
 
 // Get Single Project by ID

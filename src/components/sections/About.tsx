@@ -43,7 +43,7 @@ export default function About({ aboutContent }: AboutProps) {
     return (
         <section
             ref={sectionRef}
-            className="h-screen sticky top-0 flex items-center justify-center bg-background text-foreground overflow-hidden z-10"
+            className="min-h-screen sticky top-0 flex items-center justify-center bg-background text-foreground overflow-hidden z-10"
             style={{ zIndex: 10 }}
         >
             <motion.div
@@ -56,11 +56,11 @@ export default function About({ aboutContent }: AboutProps) {
                 {/* GIANT WATERMARK BACKGROUND */}
                 <WatermarkText text="ABOUT ME" x={watermarkX} animate />
 
-                <div className="w-full px-6 md:px-20 relative z-10 w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 h-full items-center">
+                <div className="w-full px-6 md:px-20 relative z-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 h-full items-center">
 
                         {/* LEFT COLUMN: Main Info */}
-                        <div className="flex flex-col justify-center space-y-8 md:space-y-10">
+                        <div className="flex flex-col justify-center space-y-4 md:space-y-6">
                             {/* Label - Replaced with reusable component */}
                             <SectionHeading number="01" title="ABOUT" />
 
@@ -81,17 +81,17 @@ export default function About({ aboutContent }: AboutProps) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2, duration: 0.8 }}
                                 viewport={{ once: false, amount: 0.3 }}
-                                className="space-y-6 max-w-lg"
+                                className="space-y-3 md:space-y-4 max-w-lg"
                             >
-                                <p className="description-text">
+                                <p className="description-text text-sm md:text-base">
                                     {aboutContent?.greeting || "Hi, I'm"} <span className="bg-primary/10 text-primary px-1 font-medium">{aboutContent?.name || "Gaza Chansa"}</span>, {aboutContent?.introText || "A Software Engineer who loves building modern web applications with cutting-edge technologies."}
                                 </p>
-                                <p className="description-text opacity-80">
+                                <p className="description-text opacity-80 text-sm md:text-base">
                                     {aboutContent?.focusText || "Currently focusing on creating interactions that feel natural and performance that feels instantaneous."}
                                 </p>
 
-                                <div className="pt-6">
-                                    <a href="#experience" className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.2em] text-white hover:text-primary transition-colors group font-mono">
+                                <div className="pt-3">
+                                    <a href="#experience" className="inline-flex items-center gap-3 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white hover:text-primary transition-colors group font-mono">
                                         View Experience
                                         <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
                                     </a>
@@ -100,21 +100,21 @@ export default function About({ aboutContent }: AboutProps) {
                         </div>
 
                         {/* RIGHT COLUMN: Scroll Prompt & Decor */}
-                        <div className="hidden md:flex flex-col justify-center items-end text-right space-y-8 relative">
+                        <div className="hidden md:flex flex-col justify-center items-end text-right space-y-6 relative">
                             {/* Decorative Box (Blue square from reference) */}
                             <motion.div
                                 animate={{ rotate: 360 }}
                                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                                className="absolute top-0 right-10 w-24 h-24 border border-primary/30 rounded-lg pointer-events-none"
+                                className="absolute top-0 right-10 w-16 h-16 border border-primary/30 rounded-lg pointer-events-none"
                             />
 
-                            <div className="space-y-4">
+                            <div className="space-y-2">
                                 <motion.span
                                     initial={{ opacity: 0, x: 20 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: false, amount: 0.3 }}
                                     transition={{ delay: 0.3 }}
-                                    className="section-label opacity-60"
+                                    className="section-label opacity-60 text-xs"
                                 >
                                     // Projects
                                 </motion.span>
@@ -124,7 +124,7 @@ export default function About({ aboutContent }: AboutProps) {
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: false, amount: 0.3 }}
                                     transition={{ delay: 0.4 }}
-                                    className="headline-secondary"
+                                    className="headline-secondary text-2xl md:text-3xl"
                                 >
                                     SCROLL TO<br />
                                     EXPLORE
@@ -136,13 +136,13 @@ export default function About({ aboutContent }: AboutProps) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.6, duration: 0.8 }}
                                 viewport={{ once: false, amount: 0.3 }}
-                                className="pt-8"
+                                className="pt-4"
                             >
                                 <motion.div
                                     animate={{ y: [0, 10, 0] }}
                                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                                 >
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary w-8 h-8">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary w-6 h-6">
                                         <path d="M12 5v14M19 12l-7 7-7-7" />
                                     </svg>
                                 </motion.div>
@@ -153,7 +153,7 @@ export default function About({ aboutContent }: AboutProps) {
                 </div>
 
                 {/* Circuit pattern separator */}
-                <div className="absolute bottom-0 right-0 w-64 h-64 opacity-5 pointer-events-none"
+                <div className="absolute bottom-0 right-0 w-48 h-48 opacity-5 pointer-events-none"
                     style={{ backgroundImage: 'radial-gradient(circle, #22d3ee 1px, transparent 1px)', backgroundSize: '10px 10px' }}>
                 </div>
             </motion.div>
