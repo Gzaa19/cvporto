@@ -23,7 +23,7 @@ export default function Hero({ heroStatus }: HeroProps) {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     return (
-        <section className="min-h-screen relative overflow-hidden bg-background flex flex-col justify-end">
+        <section className="min-h-screen relative overflow-hidden bg-background flex flex-col justify-center">
             {/* Background decorative elements */}
             <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-900 to-transparent opacity-20 pointer-events-none" />
 
@@ -63,11 +63,11 @@ export default function Hero({ heroStatus }: HeroProps) {
                 />
             </motion.div>
 
-            {/* Content Container - Centered on Mobile, Left on Desktop */}
-            <div className="z-10 px-6 md:px-20 h-full flex flex-col justify-center items-center md:items-start md:justify-end pb-8 md:pb-24">
+            {/* Content Container - Left but not at bottom */}
+            <div className="z-10 px-6 md:px-20 h-full flex flex-col justify-center items-start pb-8 md:pb-24">
 
-                {/* Main Text Area - Centered on Mobile, Left on Desktop */}
-                <div className="mb-4 md:mb-8 w-full flex flex-col items-center md:items-start text-center md:text-left">
+                {/* Main Text Area - Left aligned */}
+                <div className="mb-4 md:mb-8 w-full flex flex-col items-start text-left">
                     {/* Name Part 1: Solid - Moves Left */}
                     <div className="overflow-hidden w-fit">
                         <StaggeredText
@@ -101,13 +101,13 @@ export default function Hero({ heroStatus }: HeroProps) {
                     </div>
                 </div>
 
-                {/* Bottom Status Cards - Centered on Mobile */}
+                {/* Bottom Status Cards - Left aligned */}
                 <ScrollHideContent>
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1, duration: 0.8 }}
-                        className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4"
+                        className="flex flex-wrap gap-2 md:gap-4"
                     >
                         {/* Card 1 - Location */}
                         <div className="p-2 md:p-3 border border-white/20 bg-background/30 backdrop-blur-sm min-w-[110px] md:min-w-[140px]">
